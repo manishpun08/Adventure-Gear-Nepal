@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const dbName = "AdventureGear";
-const userName = "manishpunmagar999";
-const userPassword = "manish123";
+const dbName = process.env.DB_NAME;
+const userName = process.env.USER_NAME;
+const userPassword = process.env.USER_PASSWORD;
 
 const connectDB = async () => {
   try {

@@ -8,6 +8,7 @@ import {
 import { productReqBodyValidation } from "../middleware/reqBody.Product.middleware.js";
 import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 import { paginationValidationSchema } from "../middleware/pagination.validation.middleware.js";
+import Cart from "../cart/cart.model.js";
 
 const router = express.Router();
 
@@ -91,6 +92,10 @@ router.delete(
     }
     // delete product
     await Product.deleteOne({ _id: productId });
+
+    // delete cart
+    await Cart.deleteMany({ productId });
+
     // send proper response
     return res
       .status(200)
@@ -185,14 +190,17 @@ router.post(
           name: 1,
           brand: 1,
           price: 1,
-          description: { $substr: ["$description", 0, 200] },
+          description: { $substr: ["$description", 0, 150] },
           image: 1,
         },
       },
     ]);
+    const totalProducts = await Product.find().countDocuments();
+    const numberOfPages = Math.ceil(totalProducts / limit);
+
     return res
       .status(200)
-      .send({ message: "success", productList: productList });
+      .send({ message: "success", productList: productList, numberOfPages });
   }
 );
 
@@ -237,14 +245,17 @@ router.post(
           name: 1,
           brand: 1,
           price: 1,
-          description: { $substr: ["$description", 0, 200] },
+          description: { $substr: ["$description", 0, 150] },
           image: 1,
         },
       },
     ]);
+    const totalProducts = await Product.find().countDocuments();
+    const numberOfPages = Math.ceil(totalProducts / limit);
+
     return res
       .status(200)
-      .send({ message: "success", productList: productList });
+      .send({ message: "success", productList: productList, numberOfPages });
   }
 );
 

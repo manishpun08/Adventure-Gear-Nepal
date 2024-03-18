@@ -25,8 +25,8 @@ const ProductCard = (props) => {
         }}
         sx={{
           width: "100%",
-          height: "300px",
-          objectFit: "contain",
+          height: "200px",
+          objectFit: "cover",
           marginTop: "7px",
           cursor: "pointer",
         }}

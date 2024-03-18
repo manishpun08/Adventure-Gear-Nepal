@@ -16,6 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const DeleteProductDialog = () => {
+
   const navigate = useNavigate();
   const params = useParams();
   const productId = params?.id;
@@ -43,6 +44,7 @@ const DeleteProductDialog = () => {
       console.log(error?.response?.data?.message);
     },
   });
+  
   return (
     <React.Fragment>
       <Button

@@ -13,7 +13,7 @@ const MainLayout = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          margin: "6rem 0",
+          margin: "2rem 0",
         }}
       >
         <Container>

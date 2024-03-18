@@ -23,7 +23,7 @@ app.use(productRoutes);
 app.use(cartRoutes);
 
 // port and server
-const PORT = 8000;
+const PORT = process.env.API_PORT;
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
 });

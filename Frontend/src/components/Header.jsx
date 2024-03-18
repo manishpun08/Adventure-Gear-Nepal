@@ -2,10 +2,12 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import {
+  Badge,
   Box,
   Button,
   Container,
   Grid,
+  IconButton,
   Menu,
   MenuItem,
   Stack,
@@ -20,6 +22,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CustomAvatar from "./CustomAvatar";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 import DialpadIcon from "@mui/icons-material/Dialpad";
+import { useQuery } from "react-query";
+import $axios from "../lib/axios.instance";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,7 +69,30 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+// add to cart
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
+
 const Header = () => {
+  const userRole = localStorage.getItem("userRole");
+
+  // get cart Item count
+  const { isLoading, isError, error, data } = useQuery({
+    queryKey: ["get-cart-item-count"],
+    queryFn: async () => {
+      return await $axios.get("/cart/item/count");
+    },
+    enabled: userRole === "buyer",
+  });
+
+  const itemCount = data?.data?.itemCount;
+
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -121,7 +148,15 @@ const Header = () => {
           <Grid container sx={{ alignItems: "center" }}>
             {/* logo */}
             <Grid item xs={12} md={2}>
-              <img className="logo" src="../assets/TreakLogo.png" alt="logo" />
+              <img
+                onClick={() => {
+                  navigate("/home");
+                }}
+                style={{ width: "90px", cursor: "pointer" }}
+                className="logo"
+                src="/img/TreakLogo.png"
+                alt="logo"
+              />
             </Grid>
             <Grid item xs={12} md={5}>
               <Search>
@@ -152,12 +187,21 @@ const Header = () => {
                   </Stack>
                 </Link>
 
-                <Link to="#">
-                  <Stack direction="row" spacing={0.8}>
-                    <ShoppingCartIcon />
-                    <Typography>Cart</Typography>
-                  </Stack>
-                </Link>
+                {/* cart  */}
+                {userRole === "buyer" && (
+                  <IconButton
+                    onClick={() => navigate("/cart")}
+                    sx={{
+                      color: "#fff",
+                      marginRight: "1.5rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <StyledBadge badgeContent={itemCount} color="secondary">
+                      <ShoppingCartIcon />
+                    </StyledBadge>
+                  </IconButton>
+                )}
 
                 <Link to="login">
                   <Stack direction="row" spacing={0.8}>
@@ -165,8 +209,10 @@ const Header = () => {
                     <Typography>Log In</Typography>
                   </Stack>
                 </Link>
+
                 {/* Avatar of user  */}
                 <CustomAvatar />
+
                 {/* logout account  */}
                 <LogoutConfirmationDialog />
               </Box>

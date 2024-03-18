@@ -5,6 +5,7 @@ import {
   Checkbox,
   Chip,
   Container,
+  Grid,
   IconButton,
   Stack,
   Tab,
@@ -15,9 +16,10 @@ import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
+import { useMutation, useQueryClient } from "react-query";
+import $axios from "../lib/axios.instance";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,7 +56,10 @@ function a11yProps(index) {
 
 // main function
 const ProductDescription = (props) => {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
+
   const userRole = localStorage.getItem("userRole");
 
   const [value, setValue] = React.useState(0);
@@ -62,25 +67,42 @@ const ProductDescription = (props) => {
     setValue(newValue);
   };
 
+  const params = useParams();
+
   const [count, setCount] = useState(1);
+
+  // to increase count of quantity
   const increaseCount = () => {
-    if (count < props?.quantity) {
-      setCount((prevCount) => {
-        return prevCount + 1;
-      });
+    if (count === props?.quantity) {
+      return;
     }
-  };
-  const decreaseCount = () => {
-    if (count > 1) {
-      setCount((prevCount) => {
-        return prevCount - 1;
-      });
-    }
+    setCount((prevCount) => prevCount + 1);
   };
 
-  useMutation({
-    mutationKey: [""],
+  // to decrease count of quantity
+  const decreaseCount = () => {
+    if (count === 1) {
+      return;
+    }
+    setCount((prevCount) => prevCount - 1);
+  };
+
+  const { isLoading, mutate } = useMutation({
+    mutationKey: ["add-product-to-cart"],
+    mutationFn: async () => {
+      return await $axios.post("/cart/item/add", {
+        productId: params?.id,
+        orderQuantity: count,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("get-cart-item-count");
+    },
+    onError: (error) => {
+      console.log("error");
+    },
   });
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -131,36 +153,36 @@ const ProductDescription = (props) => {
             <>
               {/* choose quantity */}
               <Stack direction="row" alignItems="center" spacing={2}>
-                <IconButton onClick={decreaseCount}>
+                <IconButton onClick={decreaseCount} disabled={count === 1}>
                   <RemoveIcon />
                 </IconButton>
                 <Typography>{count}</Typography>
-                <IconButton onClick={increaseCount}>
+                <IconButton
+                  onClick={increaseCount}
+                  disabled={props.quantity === count}
+                >
                   <AddIcon />
                 </IconButton>
               </Stack>
 
-              <Button variant="contained" color="info">
+              <Button variant="contained" color="info" onClick={() => mutate()}>
                 Add to Cart
               </Button>
             </>
           )}
-
           {userRole === "seller" && (
             <>
               <Stack direction="row" spacing={4} mt={1}>
                 <Button
-                  startIcon={<EditIcon />}
                   variant="contained"
                   color="info"
+                  startIcon={<EditIcon />}
                   onClick={() => {
                     navigate(`/product/edit/${props._id}`);
                   }}
                 >
                   <Typography>Edit product</Typography>
                 </Button>
-
-                {/* delete product function  */}
                 <DeleteProductDialog />
               </Stack>
             </>

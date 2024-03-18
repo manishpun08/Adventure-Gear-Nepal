@@ -21,8 +21,9 @@ const Footer = () => {
             <Grid container>
               <Grid item xs={12} md={3}>
                 <img
+                  style={{ width: "90px" }}
                   className="logo"
-                  src="https://static.wixstatic.com/media/edb397_a212e3b64ee64b849ec059b238672e0a~mv2.png/v1/crop/x_82,y_196,w_918,h_608/fill/w_304,h_196,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/nepal%20sample%20(2).png"
+                  src="/img/TreakLogo.png"
                   alt="logo"
                 />
               </Grid>

@@ -6,6 +6,7 @@ import AddProduct from "../pages/AddProduct";
 import Contact from "../pages/Contact";
 import ProductDetails from "../pages/ProductDetails";
 import EditProduct from "../components/EditProduct";
+import Cart from "../pages/Cart";
 
 const LoginRoute = [
   {
@@ -39,6 +40,10 @@ const LoginRoute = [
       {
         path: "product/edit/:id",
         element: <EditProduct />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
     ],
   },

@@ -1,7 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import { isBuyer } from "../middleware/authentication.middleware.js";
-import { cartReqBodyValidation } from "../middleware/cart.reqBody.validation.middleware.js";
+import {
+  cartReqBodyValidation,
+  updateCartReqBodyValidation,
+} from "../middleware/cart.reqBody.validation.middleware.js";
 import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 import Cart from "./cart.model.js";
 import Product from "../product/product.model.js";
@@ -55,7 +58,7 @@ router.post(
     const product = await Product.findOne({ _id: cartItem.productId });
 
     // if ordered quantity is greater than product quantity, throw error
-    if (cartItem.orderQuantity > product.quantity) {
+    if (cartItem?.orderQuantity > product?.quantity) {
       return res.status(403).send({ message: "Product is outnumbered." });
     }
     // create cart
@@ -115,12 +118,96 @@ router.get("/cart/item/list", isBuyer, async (req, res) => {
         price: { $first: "$productDetails.price" },
         availableQuantity: { $first: "$productDetails.quantity" },
         category: { $first: "$productDetails.category" },
+        image: { $first: "$productDetails.image" },
         productId: 1,
-        oderQuantity: 1,
+        orderQuantity: 1,
+        subTotal: {
+          $multiply: [{ $first: "$productDetails.price" }, "$orderQuantity"],
+        },
       },
     },
   ]);
-  return res.status(200).send({ message: "success", cartItem: cartItemList });
+
+  // for sub total of all products
+  let allProductSubTotal = 0;
+  cartItemList.forEach((item) => {
+    allProductSubTotal = allProductSubTotal + item.subTotal;
+  });
+
+  // for discount granting 5% discount in all products
+  const discount = 0.05 * allProductSubTotal;
+
+  // for grand total
+  const grandTotal = allProductSubTotal - discount;
+
+  return res.status(200).send({
+    message: "success",
+    cartItem: cartItemList,
+    orderSummary: [
+      { name: "Sub total", value: allProductSubTotal.toFixed(2) },
+      { name: "discount", value: discount.toFixed(2) },
+      { name: "GrandTotal", value: grandTotal.toFixed(2) },
+    ],
+  });
 });
 
+// cart count
+router.get("/cart/item/count", isBuyer, async (req, res) => {
+  const cartCount = await Cart.find({
+    buyerId: req.loggedInUserId,
+  }).countDocuments();
+  return res.status(200).send({ message: "success", itemCount: cartCount });
+});
+
+// TODO:update cart quantity.
+router.put(
+  "/cart/quantity/update/:id",
+  isBuyer,
+  checkMongoIdFromParams,
+  updateCartReqBodyValidation,
+  async (req, res) => {
+    // extract product id from req.params
+    const productId = req.params.id;
+
+    // check if cart exists using product id and buyer id
+    const cart = await Cart.findOne({ productId, buyerId: req.loggedInUserId });
+
+    // if not cart, throw error
+    if (!cart) {
+      return res.status(404).send({ message: "Product is not added to cart." });
+    }
+    // extract values from req.body
+    const actionData = req.body;
+
+    // change in order quantity
+    let newOrderedQuantity =
+      actionData.action === "inc"
+        ? cart.orderQuantity + 1
+        : cart.orderQuantity - 1;
+
+    // find product
+    const product = await Product.findOne({ _id: productId });
+
+    // not exceeding more than available quantity and less then 1.
+    const availableQuantity = product.quantity;
+    if (newOrderedQuantity > availableQuantity) {
+      return res.status(403).send({ message: "Product is outnumbered." });
+    }
+
+    if (newOrderedQuantity < 1) {
+      return res.status(403).send({ message: "Please remove item from cart." });
+    }
+
+    // update cart
+    await Cart.updateOne(
+      { productId, buyerId: req.loggedInUserId },
+      {
+        $set: {
+          orderQuantity: newOrderedQuantity,
+        },
+      }
+    );
+    return res.status(200).send({ message: "Cart is updated successfully." });
+  }
+);
 export default router;
