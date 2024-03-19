@@ -32,7 +32,7 @@ const Cart = () => {
           <CartTable cartItem={cartItem} />
         </Grid>
 
-        <Grid item xs={6} lg={3} sx={{ marginTop: { lg: "2.8rem" } }}>
+        <Grid item xs={12} lg={3} sx={{ marginTop: { lg: "2.8rem" } }}>
           <CartSummary orderSummary={orderSummary} />
         </Grid>
       </Grid>

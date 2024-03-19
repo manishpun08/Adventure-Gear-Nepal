@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { productCategories } from "../constant/general.constant";
 import {
+  Box,
   Button,
   Checkbox,
   FormControl,
@@ -21,6 +22,11 @@ import $axios from "../lib/axios.instance";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -35,6 +41,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const EditProduct = () => {
+  const dispatch = useDispatch();
   const [productImage, setProductImage] = useState(null);
   const [localUrl, setLocalUrl] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -62,9 +69,10 @@ const EditProduct = () => {
     },
     onSuccess: (res) => {
       navigate(`/productDetails/${params.id}`);
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 
@@ -72,7 +80,13 @@ const EditProduct = () => {
     return <Loader />;
   }
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        // flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <Formik
         //re initialize garna milne
         enableReinitialize
@@ -155,15 +169,16 @@ const EditProduct = () => {
               gap: "1rem",
               padding: "2rem",
               boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              width: "350px",
+              width: "450px",
               borderRadius: "10px",
             }}
           >
             <Typography variant="h5" textAlign="center">
               Edit Product
             </Typography>
+
             {/* cloudniary image  */}
-            <Stack sx={{ height: "250px" }}>
+            <Stack sx={{ height: "300px" }}>
               {(localUrl || productDetails?.image) && (
                 <img
                   src={localUrl || productDetails?.image}
@@ -191,65 +206,72 @@ const EditProduct = () => {
                 />
               </Button>
             </FormControl>
-            <FormControl>
-              <TextField label="Name" {...getFieldProps("name")} />
-              {touched.name && errors.name ? (
-                <FormHelperText error>{errors.name}</FormHelperText>
-              ) : null}
-            </FormControl>
 
-            <FormControl>
-              <TextField label="Brand" {...getFieldProps("brand")} />
-              {touched.brand && errors.brand ? (
-                <FormHelperText error>{errors.brand}</FormHelperText>
-              ) : null}
-            </FormControl>
+            <Stack direction="row" spacing={2}>
+              <FormControl>
+                <TextField label="Name" {...getFieldProps("name")} />
+                {touched.name && errors.name ? (
+                  <FormHelperText error>{errors.name}</FormHelperText>
+                ) : null}
+              </FormControl>
 
-            <FormControl>
-              <TextField
-                label="Price"
-                type="number"
-                {...getFieldProps("price")}
-              />
-              {touched.price && errors.price ? (
-                <FormHelperText error>{errors.price}</FormHelperText>
-              ) : null}
-            </FormControl>
+              <FormControl>
+                <TextField label="Brand" {...getFieldProps("brand")} />
+                {touched.brand && errors.brand ? (
+                  <FormHelperText error>{errors.brand}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Stack>
 
-            <FormControl>
-              <TextField
-                label="Quantity"
-                type="number"
-                {...getFieldProps("quantity")}
-              />
-              {touched.quantity && errors.quantity ? (
-                <FormHelperText error>{errors.quantity}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
-              <Select label="Category" {...getFieldProps("category")}>
-                {productCategories.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    {item}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.category && errors.category ? (
-                <FormHelperText error>{errors.category}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl>
-              <Stack direction="row" spacing={3} alignItems="center">
-                <Typography>Free Shipping</Typography>
-                <Checkbox
-                  checked={values.freeShipping}
-                  {...getFieldProps("freeShipping")}
+            <Stack direction="row" spacing={2}>
+              <FormControl>
+                <TextField
+                  label="Price"
+                  type="number"
+                  {...getFieldProps("price")}
                 />
-              </Stack>
-            </FormControl>
+                {touched.price && errors.price ? (
+                  <FormHelperText error>{errors.price}</FormHelperText>
+                ) : null}
+              </FormControl>
+
+              <FormControl>
+                <TextField
+                  label="Quantity"
+                  type="number"
+                  {...getFieldProps("quantity")}
+                />
+                {touched.quantity && errors.quantity ? (
+                  <FormHelperText error>{errors.quantity}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Stack>
+
+            <Stack direction="row" spacing={2}>
+              <FormControl sx={{ width: "185px" }}>
+                <InputLabel>Category</InputLabel>
+                <Select label="Category" {...getFieldProps("category")}>
+                  {productCategories.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {touched.category && errors.category ? (
+                  <FormHelperText error>{errors.category}</FormHelperText>
+                ) : null}
+              </FormControl>
+
+              <FormControl>
+                <Stack direction="row" spacing={3} alignItems="center">
+                  <Typography>Free Shipping</Typography>
+                  <Checkbox
+                    checked={values.freeShipping}
+                    {...getFieldProps("freeShipping")}
+                  />
+                </Stack>
+              </FormControl>
+            </Stack>
 
             <FormControl>
               <TextField
@@ -262,6 +284,7 @@ const EditProduct = () => {
                 <FormHelperText error>{errors.description}</FormHelperText>
               ) : null}
             </FormControl>
+
             <Button
               type="submit"
               variant="contained"
@@ -273,7 +296,7 @@ const EditProduct = () => {
           </form>
         )}
       </Formik>
-    </>
+    </Box>
   );
 };
 

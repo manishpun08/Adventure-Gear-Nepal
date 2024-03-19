@@ -14,7 +14,7 @@ const ProductCard = (props) => {
   return (
     <Card
       sx={{
-        width: "23%",
+        width: { xs: "100%", md: "23%", sm: "40%" },
         boxShadow:
           "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
       }}
@@ -36,7 +36,11 @@ const ProductCard = (props) => {
       />
       <CardContent>
         <Stack direction="row" justifyContent="space-between">
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography
+            gutterBottom
+            sx={{ fontWeight: "bold", fontSize: "14px" }}
+            component="div"
+          >
             {props.name}
           </Typography>
           <Chip label={props.brand} variant="outlined" color="secondary" />

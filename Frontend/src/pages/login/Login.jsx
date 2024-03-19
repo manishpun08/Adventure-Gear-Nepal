@@ -16,10 +16,13 @@ import axios from "axios";
 import { Formik } from "formik";
 import React from "react";
 import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { openErrorSnackbar } from "../../store/slices/snackbarSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   // using navigate
   const navigate = useNavigate();
 
@@ -41,7 +44,7 @@ const Login = () => {
 
     // on error
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 

@@ -30,7 +30,7 @@ const ProductDetails = () => {
           sx={{
             fontWeight: "700",
             paddingBottom: "1rem",
-            marginBottom: "3rem",
+            marginBottom: "2rem",
             borderBottom: "1px solid #ddd",
           }}
         >
@@ -41,7 +41,7 @@ const ProductDetails = () => {
           <Grid
             item
             md={5}
-            sm={12}
+            xs={12}
             sx={{
               border: "1px solid #ddd",
               boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
@@ -50,7 +50,7 @@ const ProductDetails = () => {
             <ProductImage imageUrl={productDetails?.image || fallbackImage} />
           </Grid>
 
-          <Grid item md={6} sm={12}>
+          <Grid item md={6} xs={12}>
             <ProductDescription {...productDetails} />
           </Grid>
         </Grid>

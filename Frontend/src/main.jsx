@@ -5,6 +5,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import "./index.css";
 import applicationRoutes from "./routes/index.js";
+import { Provider } from "react-redux";
+import { store } from "./store/index.js";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -14,7 +16,9 @@ const router = createBrowserRouter(applicationRoutes);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </QueryClientProvider>
   </React.StrictMode>
 );

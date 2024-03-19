@@ -2,21 +2,15 @@ export const productCategories = [
   "Bagpacks",
   "Trekking Poles",
   "Water Bottles & Filters",
-  "Compass & Binoculars",
   "Watches",
-  "Camp Furniture",
   "Camp Kitchen",
   "Headwear",
   "Climbing Equipment",
   "Eyewear",
   "Footwear",
   "Gloves",
-  "Headlamps & Lanterns",
   "Knives & Multitool",
-  "Organizer",
-  "Personal Care",
-  "Sleep Bags",
-  "Solar Panels & Power Banks",
+  "Clothes",
 ];
 
 export const fallbackImage =

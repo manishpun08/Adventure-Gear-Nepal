@@ -180,6 +180,7 @@ const Header = () => {
                   justifyContent: "flex-end",
                 }}
               >
+                {/* WISHLIST  */}
                 <Link to="#">
                   <Stack direction="row" spacing={0.8}>
                     <FavoriteIcon />
@@ -193,7 +194,6 @@ const Header = () => {
                     onClick={() => navigate("/cart")}
                     sx={{
                       color: "#fff",
-                      marginRight: "1.5rem",
                       cursor: "pointer",
                     }}
                   >
@@ -202,13 +202,6 @@ const Header = () => {
                     </StyledBadge>
                   </IconButton>
                 )}
-
-                <Link to="login">
-                  <Stack direction="row" spacing={0.8}>
-                    <AccountCircleIcon />
-                    <Typography>Log In</Typography>
-                  </Stack>
-                </Link>
 
                 {/* Avatar of user  */}
                 <CustomAvatar />

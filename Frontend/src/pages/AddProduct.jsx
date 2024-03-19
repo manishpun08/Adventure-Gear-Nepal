@@ -22,6 +22,12 @@ import { addProduct } from "../lib/apis";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from "axios";
+import Loader from "../components/Loader";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -36,7 +42,10 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
 const AddProduct = () => {
+  const dispatch = useDispatch();
+
   const [productImage, setProductImage] = useState(null);
   const [localUrl, setLocalUrl] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -52,16 +61,27 @@ const AddProduct = () => {
     // success vayepaxi
     onSuccess: (response) => {
       navigate("/product");
+      dispatch(openSuccessSnackbar(response?.data?.message));
     },
 
     // error aayepaxi
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
+
+  if (isLoading || imageLoading) {
+    return <Loader />;
+  }
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      {(isLoading || imageLoading) && <LinearProgress color="success" />}
+    <Box
+      sx={{
+        display: "flex",
+        // flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <Formik
         initialValues={{
           name: "",
@@ -143,11 +163,13 @@ const AddProduct = () => {
               gap: "1rem",
               padding: "2rem",
               boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              width: "350px",
+              width: "450px",
               borderRadius: "10px",
             }}
           >
-            <Typography variant="h5"> Add Product</Typography>
+            <Typography variant="h5" textAlign="center">
+              Add Product
+            </Typography>
 
             {productImage && (
               <Stack sx={{ height: "300px" }}>
@@ -174,65 +196,72 @@ const AddProduct = () => {
               </Button>
             </FormControl>
 
-            <FormControl>
-              <TextField label="Name" {...formik.getFieldProps("name")} />
-              {formik.touched.name && formik.errors.name ? (
-                <FormHelperText error>{formik.errors.name}</FormHelperText>
-              ) : null}
-            </FormControl>
+            <Stack direction="row" spacing={2}>
+              <FormControl>
+                <TextField label="Name" {...formik.getFieldProps("name")} />
+                {formik.touched.name && formik.errors.name ? (
+                  <FormHelperText error>{formik.errors.name}</FormHelperText>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <TextField label="Brand" {...formik.getFieldProps("brand")} />
+                {formik.touched.brand && formik.errors.brand ? (
+                  <FormHelperText error>{formik.errors.brand}</FormHelperText>
+                ) : null}
+              </FormControl>
+            </Stack>
 
-            <FormControl>
-              <TextField label="Brand" {...formik.getFieldProps("brand")} />
-              {formik.touched.brand && formik.errors.brand ? (
-                <FormHelperText error>{formik.errors.brand}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl>
-              <TextField
-                label="Price"
-                type="number"
-                {...formik.getFieldProps("price")}
-              />
-              {formik.touched.price && formik.errors.price ? (
-                <FormHelperText error>{formik.errors.price}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl>
-              <TextField
-                label="Quantity"
-                type="number"
-                {...formik.getFieldProps("quantity")}
-              />
-              {formik.touched.quantity && formik.errors.quantity ? (
-                <FormHelperText error>{formik.errors.quantity}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
-              <Select label="Category" {...formik.getFieldProps("category")}>
-                {productCategories.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    {item}
-                  </MenuItem>
-                ))}
-              </Select>
-              {formik.touched.category && formik.errors.category ? (
-                <FormHelperText error>{formik.errors.category}</FormHelperText>
-              ) : null}
-            </FormControl>
-
-            <FormControl>
-              <Stack direction="row" spacing={3} alignItems="center">
-                <Typography>Free Shipping</Typography>
-                <Checkbox
-                  {...label}
-                  {...formik.getFieldProps("freeShipping")}
+            <Stack direction="row" spacing={2}>
+              <FormControl>
+                <TextField
+                  label="Price"
+                  type="number"
+                  {...formik.getFieldProps("price")}
                 />
-              </Stack>
-            </FormControl>
+                {formik.touched.price && formik.errors.price ? (
+                  <FormHelperText error>{formik.errors.price}</FormHelperText>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <TextField
+                  label="Quantity"
+                  type="number"
+                  {...formik.getFieldProps("quantity")}
+                />
+                {formik.touched.quantity && formik.errors.quantity ? (
+                  <FormHelperText error>
+                    {formik.errors.quantity}
+                  </FormHelperText>
+                ) : null}
+              </FormControl>
+            </Stack>
+
+            <Stack direction="row" spacing={2} alignContent="center">
+              <FormControl sx={{ width: "185px" }}>
+                <InputLabel>Category</InputLabel>
+                <Select label="Category" {...formik.getFieldProps("category")}>
+                  {productCategories.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {formik.touched.category && formik.errors.category ? (
+                  <FormHelperText error>
+                    {formik.errors.category}
+                  </FormHelperText>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Typography>Free Shipping</Typography>
+                  <Checkbox
+                    {...label}
+                    {...formik.getFieldProps("freeShipping")}
+                  />
+                </Stack>
+              </FormControl>
+            </Stack>
 
             <FormControl>
               <TextField

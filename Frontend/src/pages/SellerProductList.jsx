@@ -20,7 +20,7 @@ const SellerProductList = () => {
     queryFn: async () => {
       return await $axios.post("/product/list/seller", {
         page: currentPage,
-        limit: 3,
+        limit: 8,
       });
     },
   });
@@ -38,10 +38,14 @@ const SellerProductList = () => {
         variant="contained"
         color="success"
         onClick={goToAddProduct}
-        sx={{ marginBottom: "2rem" }}
+        sx={{
+          marginBottom: "1rem",
+          width: { xs: "100%", md: "200px", sm: "300px" },
+        }}
       >
         Add Product
       </Button>
+
       <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
         {productList.map((item) => {
           return <ProductCard key={item._id} {...item} />;

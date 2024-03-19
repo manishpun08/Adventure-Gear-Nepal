@@ -20,6 +20,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
 import { useMutation, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +61,8 @@ function a11yProps(index) {
 
 // main function
 const ProductDescription = (props) => {
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
@@ -95,11 +102,13 @@ const ProductDescription = (props) => {
         orderQuantity: count,
       });
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries("get-cart-item-count");
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      console.log("error");
+      // console.log("error");
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
 
@@ -112,8 +121,7 @@ const ProductDescription = (props) => {
           aria-label="basic tabs example"
         >
           <Tab label="Description" {...a11yProps(0)} />
-          <Tab label="Reviews" {...a11yProps(1)} />
-          <Tab label="Return or Exchange" {...a11yProps(2)} />
+          <Tab label="Return or Exchange" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -121,73 +129,68 @@ const ProductDescription = (props) => {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        Item Three
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
         No returns only exchange within 7 days of purchase. Packaging should be
         intact.
       </CustomTabPanel>
 
       <Box>
-        <Container>
-          <Stack direction="row" alignItems="center" mt="1rem" spacing={1}>
-            <Chip label={props.brand} color="secondary" variant="outlined" />
-            <Chip label={props.category} color="warning" variant="outlined" />
-          </Stack>
-          <Stack direction="row" alignItems="center" mt="1rem" spacing={1}>
-            <Typography> Price:</Typography>
-            <Typography>{props.price}</Typography>
-          </Stack>
+        <Stack direction="row" alignItems="center" mt="1rem" spacing={1}>
+          <Chip label={props.brand} color="secondary" variant="outlined" />
+          <Chip label={props.category} color="warning" variant="outlined" />
+        </Stack>
+        <Stack direction="row" alignItems="center" mt="1rem" spacing={1}>
+          <Typography> Price:</Typography>
+          <Typography>{props.price}</Typography>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Typography> Free Shipping:</Typography>
+          <Typography>
+            <Checkbox checked={props.freeShipping} color="warning" />
+          </Typography>
+        </Stack>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography> Available quantity:</Typography>
+          <Typography>{props.quantity}</Typography>
+        </Stack>
+        {userRole === "buyer" && (
+          <>
+            {/* choose quantity */}
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <IconButton onClick={decreaseCount} disabled={count === 1}>
+                <RemoveIcon />
+              </IconButton>
+              <Typography>{count}</Typography>
+              <IconButton
+                onClick={increaseCount}
+                disabled={props.quantity === count}
+              >
+                <AddIcon />
+              </IconButton>
+            </Stack>
 
-          <Stack direction="row" alignItems="center">
-            <Typography> Free Shipping:</Typography>
-            <Typography>
-              <Checkbox checked={props.freeShipping} color="warning" />
-            </Typography>
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography> Available quantity:</Typography>
-            <Typography>{props.quantity}</Typography>
-          </Stack>
-          {userRole === "buyer" && (
-            <>
-              {/* choose quantity */}
-              <Stack direction="row" alignItems="center" spacing={2}>
-                <IconButton onClick={decreaseCount} disabled={count === 1}>
-                  <RemoveIcon />
-                </IconButton>
-                <Typography>{count}</Typography>
-                <IconButton
-                  onClick={increaseCount}
-                  disabled={props.quantity === count}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Stack>
+            <Button variant="contained" color="info" onClick={() => mutate()}>
+              Add to Cart
+            </Button>
+          </>
+        )}
 
-              <Button variant="contained" color="info" onClick={() => mutate()}>
-                Add to Cart
+        {userRole === "seller" && (
+          <>
+            <Stack direction="row" spacing={4} mt={1}>
+              <Button
+                variant="contained"
+                color="info"
+                startIcon={<EditIcon />}
+                onClick={() => {
+                  navigate(`/product/edit/${props._id}`);
+                }}
+              >
+                <Typography>Edit product</Typography>
               </Button>
-            </>
-          )}
-          {userRole === "seller" && (
-            <>
-              <Stack direction="row" spacing={4} mt={1}>
-                <Button
-                  variant="contained"
-                  color="info"
-                  startIcon={<EditIcon />}
-                  onClick={() => {
-                    navigate(`/product/edit/${props._id}`);
-                  }}
-                >
-                  <Typography>Edit product</Typography>
-                </Button>
-                <DeleteProductDialog />
-              </Stack>
-            </>
-          )}
-        </Container>
+              <DeleteProductDialog />
+            </Stack>
+          </>
+        )}
       </Box>
     </>
   );

@@ -16,16 +16,16 @@ const CartSummary = ({ orderSummary }) => {
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         Order Summary
       </Typography>
-      
+
       {orderSummary.map((item, index) => {
         return (
-          <Grid container key={index} textAlign="center">
-            <Grid item md={6}>
+          <Grid container key={index}>
+            <Grid item xs={6}>
               <Typography textAlign="left" sx={{ textTransform: "capitalize" }}>
                 {item.name}
               </Typography>
             </Grid>
-            <Grid item md={6}>
+            <Grid item xs={6}>
               <Typography textAlign="left">Rs:{item.value}</Typography>
             </Grid>
           </Grid>

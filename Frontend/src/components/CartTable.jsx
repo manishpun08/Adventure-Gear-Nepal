@@ -24,8 +24,16 @@ import { useMutation, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
 import { fallbackImage } from "../constant/general.constant";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 const CartTable = ({ cartItem }) => {
+  // redux dispatch
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   // for removing single cart item
@@ -37,6 +45,7 @@ const CartTable = ({ cartItem }) => {
     onSuccess: (res) => {
       queryClient.invalidateQueries("get-cart-items");
       queryClient.invalidateQueries("get-cart-item-count");
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
       console.log(error?.response?.data?.message);
@@ -51,9 +60,10 @@ const CartTable = ({ cartItem }) => {
     onSuccess: (res) => {
       queryClient.invalidateQueries("get-cart-items");
       queryClient.invalidateQueries("get-cart-item-count");
+      dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
   // for inc and dec cart quantity
@@ -71,7 +81,7 @@ const CartTable = ({ cartItem }) => {
       queryClient.invalidateQueries("get-cart-items");
     },
     onError: (error) => {
-      console.log("error");
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
   return (
