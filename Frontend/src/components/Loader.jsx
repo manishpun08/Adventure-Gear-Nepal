@@ -4,7 +4,7 @@ import React from "react";
 const Loader = () => {
   return (
     <div>
-      <Box>
+      <Box sx={{ textAlign: "center" }}>
         <img src="/gif/loader.gif" alt="loader" />
       </Box>
     </div>

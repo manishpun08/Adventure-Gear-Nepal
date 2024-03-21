@@ -14,6 +14,7 @@ const MainLayout = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          // textAlign: "center",
           margin: "2rem 0",
         }}
       >

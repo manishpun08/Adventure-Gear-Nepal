@@ -60,8 +60,18 @@ const Register = () => {
 
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {isLoading && <LinearProgress color="success" />}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "380px",
+          minHeight: "80vh",
+          marginLeft: "38%",
+          marginTop: "1rem",
+          marginBottom: "1rem",
+        }}
+      >
+        {isLoading && <LinearProgress color="secondary" />}
         <Formik
           initialValues={{
             firstName: "",
@@ -120,9 +130,8 @@ const Register = () => {
                 gap: "1rem",
                 padding: "2rem",
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                width: "400px",
+                width: "380px",
                 borderRadius: "10px",
-                margin: "5rem auto",
               }}
             >
               <Typography variant="h5" textAlign="center">
@@ -282,7 +291,11 @@ const Register = () => {
               </Button>
 
               <Link to="/login">
-                <Typography variant="subtitle2" textAlign="center" sx={{ color: "blue" }}>
+                <Typography
+                  variant="subtitle2"
+                  textAlign="center"
+                  sx={{ color: "blue" }}
+                >
                   Already Registered? Login
                 </Typography>
               </Link>

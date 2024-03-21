@@ -3,17 +3,22 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import ProductCard from "../components/ProductCard";
 import $axios from "../lib/axios.instance";
+import { useSelector } from "react-redux";
 
 const BuyerProductList = () => {
+  // fetching redux data
+  const { searchText } = useSelector((state) => state.product);
+
   // for pagination
   const [currentPage, setCurrentPage] = useState(1);
 
   const { isLoading, isError, error, data } = useQuery({
-    queryKey: ["buyer-product-list", currentPage],
+    queryKey: ["buyer-product-list", currentPage, searchText],
     queryFn: async () => {
       return await $axios.post("/product/list/buyer", {
         page: currentPage,
-        limit: 4,
+        limit: 8,
+        searchText,
       });
     },
   });
@@ -35,13 +40,17 @@ const BuyerProductList = () => {
           display: "flex",
           gap: "1rem",
           flexWrap: "wrap",
+          // flexDirection: "column",
+          width: "100%",
         }}
       >
-        {productList.map((item) => {
+        {productList?.map((item) => {
           return <ProductCard key={item._id} {...item} />;
         })}
       </Box>
-      <Stack alignItems="center" mt="2rem">
+
+      {/* for pagination  */}
+      <Stack alignItems="center" sx={{ width: "100%" }} mt="2rem">
         <Pagination
           count={numberOfPages}
           page={currentPage}

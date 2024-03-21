@@ -8,21 +8,24 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 // import required modules
-import { Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Box, Button, Typography } from "@mui/material";
 
 const Slider = () => {
   return (
     <>
       <Swiper
-        slidesPerView={1}
         spaceBetween={30}
-        loop={true}
+        centeredSlides={true}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
         pagination={{
           clickable: true,
         }}
         navigation={true}
-        modules={[Pagination, Navigation]}
+        modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
         <SwiperSlide style={{ position: "relative" }}>
@@ -57,5 +60,4 @@ const Slider = () => {
     </>
   );
 };
-
 export default Slider;

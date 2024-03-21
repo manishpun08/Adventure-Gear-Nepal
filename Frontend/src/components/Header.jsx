@@ -1,6 +1,4 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   Badge,
   Box,
@@ -8,66 +6,16 @@ import {
   Container,
   Grid,
   IconButton,
-  Menu,
-  MenuItem,
-  Stack,
   Typography,
 } from "@mui/material";
-import InputBase from "@mui/material/InputBase";
-import { alpha, styled } from "@mui/material/styles";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { styled } from "@mui/material/styles";
+import React from "react";
+import { useQuery } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import $axios from "../lib/axios.instance";
 import CustomAvatar from "./CustomAvatar";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
-import DialpadIcon from "@mui/icons-material/Dialpad";
-import { useQuery } from "react-query";
-import $axios from "../lib/axios.instance";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  color: "black",
-  borderRadius: theme.shape.borderRadius,
-  background: "white",
-  "&:hover": {
-    backgroundColor: "#DDD",
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  color: "black",
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "black",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
+import SearchBar from "./SearchBar";
 
 // add to cart
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -95,15 +43,6 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const navItems = [
     {
       id: 1,
@@ -126,6 +65,7 @@ const Header = () => {
       path: "/contact",
     },
   ];
+
   return (
     <>
       <Box className="header-top" py={1}>
@@ -145,7 +85,7 @@ const Header = () => {
 
       <Box className="header-upper" py={2}>
         <Container maxWidth="lg">
-          <Grid container sx={{ alignItems: "center" }}>
+          <Grid container>
             {/* logo */}
             <Grid item xs={12} md={2}>
               <img
@@ -158,19 +98,32 @@ const Header = () => {
                 alt="logo"
               />
             </Grid>
-            <Grid item xs={12} md={5}>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search Here…"
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </Search>
-              <br />
+            {/* search bar  */}
+            <Grid item xs={12} md={6}>
+              <SearchBar />
+              {/* menu bar starts */}
+              <Box textAlign="center" pt="1.4rem">
+                <Box
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
+                  {navItems.map((item) => (
+                    <Button
+                      key={item.id}
+                      sx={{ color: "#fff" }}
+                      onClick={() => {
+                        navigate(item.path);
+                      }}
+                    >
+                      {item.name}
+                    </Button>
+                  ))}
+                </Box>
+              </Box>
             </Grid>
-            <Grid item xs={12} md={5}>
+            {/* login and avatar */}
+            <Grid item xs={12} md={3}>
               <Box
                 sx={{
                   display: "flex",
@@ -180,14 +133,6 @@ const Header = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                {/* WISHLIST  */}
-                <Link to="#">
-                  <Stack direction="row" spacing={0.8}>
-                    <FavoriteIcon />
-                    <Typography>WishList</Typography>
-                  </Stack>
-                </Link>
-
                 {/* cart  */}
                 {userRole === "buyer" && (
                   <IconButton
@@ -212,63 +157,6 @@ const Header = () => {
             </Grid>
           </Grid>
         </Container>
-      </Box>
-
-      {/* menu bar starts */}
-      <Box className="menu" py={2}>
-        <Box sx={{ display: "flex", gap: "1rem" }} xs={12} md={12}>
-          <Container maxWidth="lg">
-            <Stack direction="row" spacing={10}>
-              {/* dropdown menu */}
-              <Button
-                sx={{ color: "white", gap: "10px" }}
-                id="basic-button"
-                aria-controls={open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-                startIcon={<DialpadIcon />}
-                endIcon={<ArrowDropDownIcon />}
-              >
-                Shop categories
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem onClick={handleClose}>Men</MenuItem>
-                <MenuItem onClick={handleClose}>Women</MenuItem>
-                <MenuItem onClick={handleClose}>Brands</MenuItem>
-                <MenuItem onClick={handleClose}>Activity</MenuItem>
-                <MenuItem onClick={handleClose}>Category</MenuItem>
-                <MenuItem onClick={handleClose}>New Arrivals</MenuItem>
-                <MenuItem onClick={handleClose}>SALE</MenuItem>
-                <MenuItem onClick={handleClose}>Used Gear</MenuItem>
-              </Menu>
-
-              {/* main menu */}
-              <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                {navItems.map((item) => (
-                  <Button
-                    key={item.id}
-                    sx={{ color: "#fff" }}
-                    onClick={() => {
-                      navigate(item.path);
-                    }}
-                  >
-                    {item.name}
-                  </Button>
-                ))}
-              </Box>
-            </Stack>
-          </Container>
-        </Box>
-        {/* menu bar starts */}
       </Box>
     </>
   );

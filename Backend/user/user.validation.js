@@ -23,7 +23,7 @@ export let registerUserValidationSchema = Yup.object({
   gender: Yup.string().nullable().oneOf(["male", "female", "other"]).trim(),
   role: Yup.string()
     .required("Role is required")
-    .oneOf(["buyer", "seller"])
+    .oneOf(["buyer", "seller", "admin"])
     .trim(),
 });
 

@@ -108,3 +108,9 @@ ul li {
 .swiper-pagination-bullet-active {
   background-color: red !important;
 }
+
+/* search place holder  */
+.css-c63i49-MuiInputBase-input-MuiInput-input {
+  /* color: #fff !important; */
+  /* background-color: #fff !important; */
+}

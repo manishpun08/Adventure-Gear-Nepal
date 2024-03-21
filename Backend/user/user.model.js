@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ["buyer", "seller"],
+    enum: ["buyer", "seller", "admin"],
   },
 });
 // to remove password field.
@@ -51,6 +51,7 @@ userSchema.methods.toJSON = function () {
   delete obj.password;
   return obj;
 };
+
 // create table
 const User = mongoose.model("User", userSchema);
 

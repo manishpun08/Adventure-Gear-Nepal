@@ -12,25 +12,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { Formik } from "formik";
 import React from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import $axios from "../../lib/axios.instance";
 import { openErrorSnackbar } from "../../store/slices/snackbarSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
+
   // using navigate
   const navigate = useNavigate();
 
   // api hit
-  const { isLoading, isError, error, mutate } = useMutation({
+  const { isLoading, mutate } = useMutation({
     mutationKey: "login-user",
     mutationFn: async (values) => {
-      return await axios.post("http://localhost:8000/user/login", values);
+      return await $axios.post("/user/login", values);
     },
 
     // on success
@@ -56,8 +57,17 @@ const Login = () => {
   };
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {isLoading && <LinearProgress color="success" />}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "350px",
+          minHeight: "80vh",
+          marginLeft: "38%",
+          marginTop: "10%",
+        }}
+      >
+        {isLoading && <LinearProgress color="secondary" />}
         <Formik
           initialValues={{
             email: "",
@@ -87,7 +97,6 @@ const Login = () => {
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                 width: "350px",
                 borderRadius: "10px",
-                margin: "10rem auto",
               }}
             >
               <Typography variant="h5" textAlign="center">

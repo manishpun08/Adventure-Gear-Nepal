@@ -1,8 +1,7 @@
+import { Grid } from "@mui/material";
 import React from "react";
 import Slider from "../components/Slider";
-import { Box } from "@mui/material";
 import SliderRight from "../components/SliderRight";
-import { Grid } from "@mui/material";
 
 const Home = () => {
   return (

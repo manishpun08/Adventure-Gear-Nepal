@@ -5,8 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import ProductCard from "../components/ProductCard";
 import $axios from "../lib/axios.instance";
+import { useSelector } from "react-redux";
 
 const SellerProductList = () => {
+  // using redux for searching
+  const searchText = useSelector((state) => state.product);
+
   // for pagination
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,12 +19,13 @@ const SellerProductList = () => {
     navigate("/add-product");
   };
 
-  const { isLoading, isError, error, data } = useQuery({
-    queryKey: ["seller-product-list", currentPage],
+  const { isLoading, data } = useQuery({
+    queryKey: ["seller-product-list", currentPage, searchText],
     queryFn: async () => {
       return await $axios.post("/product/list/seller", {
         page: currentPage,
         limit: 8,
+        searchText,
       });
     },
   });
@@ -47,10 +52,11 @@ const SellerProductList = () => {
       </Button>
 
       <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        {productList.map((item) => {
+        {productList?.map((item) => {
           return <ProductCard key={item._id} {...item} />;
         })}
       </Box>
+      {/* for pagination  */}
       <Stack alignItems="center" mt="2rem">
         <Pagination
           count={numberOfPages}

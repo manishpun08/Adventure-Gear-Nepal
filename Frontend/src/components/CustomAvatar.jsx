@@ -40,20 +40,17 @@ function stringAvatar(name) {
 }
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// const settings = [
+//   { id: 1, name: "Profile" },
+//   { id: 2, name: "Logout" },
+// ];
 
 const CustomAvatar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
