@@ -175,12 +175,18 @@ router.post(
   // pagination function
   async (req, res) => {
     // extract pagination data from req.body
-    const { page, limit, searchText } = req.body;
+    const { page, limit, searchText, category } = req.body;
 
     // for searching product
     let match = {};
+
     if (searchText) {
       match = { name: { $regex: searchText, $options: "i" } };
+    }
+
+    // for filtering
+    if (category) {
+      match = { ...match, category: category };
     }
     // calculate skip
     const skip = (page - 1) * limit;
@@ -237,12 +243,14 @@ router.post(
     // extract pagination data from req.body
     const { page, limit } = req.body;
 
-    // for searching product
+    // ?for searching product
+
     // let match = {};
     // if (searchText) {
     //   match = { name: { $regex: searchText, $options: "i" } };
     // }
-    // calculate skip
+
+    // ?calculate skip
     const skip = (page - 1) * limit;
 
     // run query

@@ -8,19 +8,6 @@ const lobbySchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    destination: {
-      type: String,
-      required: true,
-    },
-    requiredTeammatesCount: {
-      type: String,
-      default: "no-limit",
-    },
-    recruitmentStatus: {
-      type: String,
-      enum: ["open", "closed"],
-      default: "open",
-    },
 
     expiresAt: {
       type: Date,

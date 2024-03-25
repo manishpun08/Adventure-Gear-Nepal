@@ -1,3 +1,4 @@
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {
   Box,
   Button,
@@ -5,25 +6,23 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
-  LinearProgress,
   MenuItem,
   Select,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import axios from "axios";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import Loader from "../components/Loader";
 import { productCategories } from "../constant/general.constant";
 import { addProduct } from "../lib/apis";
-import { styled } from "@mui/material/styles";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import axios from "axios";
-import Loader from "../components/Loader";
-import { useDispatch } from "react-redux";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,

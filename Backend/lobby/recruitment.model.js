@@ -14,18 +14,43 @@ const recruitmentSchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    role: {
+    destination: {
       type: String,
-      enum: ["singer", "dancer", "comedy", "experienced  hiker"],
-      required: false,
+      required: true,
     },
-    // requirements: {
-    //   type: String,
-    // },
-    status: {
+
+    adventureType: {
       type: String,
-      enum: ["pending", "accepted", "rejected"],
-      default: "pending",
+      required: true,
+      trim: true,
+      enum: ["trek", "camp"],
+    },
+
+    teammatesCount: {
+      type: Number,
+      default: "1",
+    },
+
+    timePeriod: {
+      type: Date,
+      required: true,
+    },
+
+    requirement: {
+      type: String,
+      required: true,
+    },
+
+    contactNumber: {
+      type: Number,
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+      minLength: 100,
+      maxLength: 500,
     },
   },
   {

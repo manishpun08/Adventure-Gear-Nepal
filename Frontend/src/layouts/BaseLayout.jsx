@@ -5,8 +5,8 @@ import CustomSnackbar from "../components/CustomSnackbar";
 const BaseLayout = () => {
   return (
     <>
-      <Outlet />
       <CustomSnackbar />
+      <Outlet />
     </>
   );
 };

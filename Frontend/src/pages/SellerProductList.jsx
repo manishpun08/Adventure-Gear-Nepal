@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 const SellerProductList = () => {
   // using redux for searching
-  const searchText = useSelector((state) => state.product);
+  // const searchText = useSelector((state) => state.product);
 
   // for pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,12 +20,12 @@ const SellerProductList = () => {
   };
 
   const { isLoading, data } = useQuery({
-    queryKey: ["seller-product-list", currentPage, searchText],
+    queryKey: ["seller-product-list", currentPage],
     queryFn: async () => {
       return await $axios.post("/product/list/seller", {
         page: currentPage,
         limit: 8,
-        searchText,
+        // searchText,
       });
     },
   });

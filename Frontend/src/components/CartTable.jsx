@@ -1,11 +1,6 @@
-import * as React from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import {
   Box,
   Button,
@@ -15,16 +10,18 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import * as React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import $axios from "../lib/axios.instance";
-import { fallbackImage } from "../constant/general.constant";
-import axios from "axios";
 import { useDispatch } from "react-redux";
+import { fallbackImage } from "../constant/general.constant";
+import $axios from "../lib/axios.instance";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
@@ -89,7 +86,7 @@ const CartTable = ({ cartItem }) => {
       <Box sx={{ display: "flex" }}>
         <Button
           variant="contained"
-          color="error"
+          color="info"
           sx={{ marginBottom: "10px" }}
           onClick={() => {
             flushCartMutate();

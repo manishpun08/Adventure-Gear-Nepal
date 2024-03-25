@@ -41,6 +41,7 @@ const Login = () => {
       localStorage.setItem("firstName", response?.data?.user?.firstName);
       localStorage.setItem("lastName", response?.data?.user?.lastName);
       navigate("/home");
+      
     },
 
     // on error

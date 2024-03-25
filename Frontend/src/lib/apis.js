@@ -15,8 +15,6 @@ export const getSellerProducts = async () => {
   });
 };
 
-
-
 export const deleteProduct = async (productId) => {
   return await $axios.delete(`/product/delete/${productId}`);
 };

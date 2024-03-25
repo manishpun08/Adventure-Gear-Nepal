@@ -25,17 +25,7 @@ ul li {
 }
 
 /* header part */
-.header-top {
-  background-color: var(--color-primary);
-  border-bottom: 1px solid var(--color-464646);
-  font-size: 12px;
-}
-.header-top p {
-  font-size: 12px;
-}
-.header-top a {
-  color: red;
-}
+
 .header-upper {
   align-items: center;
   background-color: var(--color-primary);
@@ -109,8 +99,6 @@ ul li {
   background-color: red !important;
 }
 
-/* search place holder  */
-.css-c63i49-MuiInputBase-input-MuiInput-input {
-  /* color: #fff !important; */
-  /* background-color: #fff !important; */
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  min-width: 120px !important;
 }

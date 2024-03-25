@@ -16,6 +16,7 @@ import $axios from "../lib/axios.instance";
 import CustomAvatar from "./CustomAvatar";
 import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 import SearchBar from "./SearchBar";
+import { useSelector } from "react-redux";
 
 // add to cart
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -28,21 +29,24 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Header = () => {
+  // user role from local storage.
   const userRole = localStorage.getItem("userRole");
+
+  const { paymentSuccessStatus } = useSelector((state) => state.payment);
 
   // get cart Item count
   const { isLoading, isError, error, data } = useQuery({
-    queryKey: ["get-cart-item-count"],
+    queryKey: ["get-cart-item-count", paymentSuccessStatus],
     queryFn: async () => {
       return await $axios.get("/cart/item/count");
     },
     enabled: userRole === "buyer",
   });
-
+  // cart item count
   const itemCount = data?.data?.itemCount;
-
+  // navigating
   const navigate = useNavigate();
-
+  // navlinks
   const navItems = [
     {
       id: 1,
@@ -64,25 +68,15 @@ const Header = () => {
       name: "Contact",
       path: "/contact",
     },
+    {
+      id: 5,
+      name: "Lobby",
+      path: "/lobby",
+    },
   ];
 
   return (
     <>
-      <Box className="header-top" py={1}>
-        <Container maxWidth="lg">
-          <Grid container>
-            <Grid item xs={12} md={6}>
-              <Typography sx={{ color: "warning.main" }} variant="body1">
-                Free shipping within Nepal with orders above Rs 10,000
-              </Typography>
-            </Grid>
-            <Grid item md={6} sx={{ textAlign: "right" }}>
-              <Link to="#">Become a Seller</Link>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
       <Box className="header-upper" py={2}>
         <Container maxWidth="lg">
           <Grid container>
@@ -98,11 +92,13 @@ const Header = () => {
                 alt="logo"
               />
             </Grid>
+
             {/* search bar  */}
             <Grid item xs={12} md={6}>
               <SearchBar />
+
               {/* menu bar starts */}
-              <Box textAlign="center" pt="1.4rem">
+              <Box textAlign="center" pt="0.8rem">
                 <Box
                   sx={{
                     display: { xs: "none", sm: "block" },
@@ -119,6 +115,14 @@ const Header = () => {
                       {item.name}
                     </Button>
                   ))}
+                  {userRole === "seller" && (
+                    <Button
+                      sx={{ color: "#fff" }}
+                      onClick={() => navigate("/orders")}
+                    >
+                      Orders
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </Grid>

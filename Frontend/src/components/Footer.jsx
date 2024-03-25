@@ -13,8 +13,6 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
-      {/* <p style={{ marginTop: "30rem" }}></p> */}
-
       <Box className="footer">
         <Box className="footer-top" sx={{ p: 3 }}>
           <Container maxWidth="lg">

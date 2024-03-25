@@ -22,7 +22,7 @@ const SearchBar = () => {
               <SearchIcon />
             </InputAdornment>
           }
-          sx={{ backgroundColor: "#fff", borderRadius: "12px" }}
+          sx={{ backgroundColor: "#fff", borderRadius: "12px", height: "3rem" }}
           placeholder="Search products..."
         />
       </FormControl>

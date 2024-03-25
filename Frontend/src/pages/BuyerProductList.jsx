@@ -1,24 +1,27 @@
-import { Box, CircularProgress, Pagination, Stack } from "@mui/material";
+import { Box, Pagination, Stack } from "@mui/material";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
+import NoProductFound from "../components/NoProductFound";
 import ProductCard from "../components/ProductCard";
 import $axios from "../lib/axios.instance";
-import { useSelector } from "react-redux";
 
 const BuyerProductList = () => {
   // fetching redux data
-  const { searchText } = useSelector((state) => state.product);
+  const { searchText, category } = useSelector((state) => state.product);
 
   // for pagination
   const [currentPage, setCurrentPage] = useState(1);
 
   const { isLoading, isError, error, data } = useQuery({
-    queryKey: ["buyer-product-list", currentPage, searchText],
+    queryKey: ["buyer-product-list", currentPage, searchText, category],
     queryFn: async () => {
       return await $axios.post("/product/list/buyer", {
         page: currentPage,
         limit: 8,
         searchText,
+        category: category || null,
       });
     },
   });
@@ -31,7 +34,10 @@ const BuyerProductList = () => {
 
   //   loading
   if (isLoading) {
-    return <CircularProgress color="secondary" />;
+    return <Loader />;
+  }
+  if (productList < 1) {
+    return <NoProductFound />;
   }
   return (
     <>
