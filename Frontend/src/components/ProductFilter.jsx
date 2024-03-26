@@ -1,26 +1,32 @@
-import * as React from "react";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { setCategory } from "../store/slices/productSlice";
-import PriceRangePicker from "./PriceRangePicker";
+import { Formik } from "formik";
+import * as React from "react";
+import * as Yup from "yup";
 import { productCategories } from "../constant/general.constant";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { useDispatch, useSelector } from "react-redux";
+import { setProductFilter } from "../store/slices/productSlice";
+import { openErrorSnackbar } from "../store/slices/snackbarSlice";
 
 const ProductFilter = () => {
+  const { category, minPrice, maxPrice } = useSelector(
+    (state) => state.product
+  );
+
   const dispatch = useDispatch();
-
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
-
+  // dialog
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -33,63 +39,108 @@ const ProductFilter = () => {
 
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={handleClickOpen}>
-        Filter Product
+      <Button variant="contained" color="secondary" onClick={handleClickOpen}>
+        Filter product
       </Button>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle textAlign="center">Product Filter</DialogTitle>
-        <DialogContent
-          sx={{
-            width: "400px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2rem",
-          }}
-        >
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select
-              value={selectedCategory}
-              label="Category"
-              onChange={(event) => {
-                setSelectedCategory(event?.target?.value);
-              }}
-            >
-              {productCategories.map((item, index) => {
-                return (
-                  <MenuItem key={index} value={item}>
-                    {item}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <PriceRangePicker />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} variant="contained" color="error">
-            Cancel
-          </Button>
-          <Button
-            form="price-range-picker"
-            onClick={() => {
-              dispatch(setCategory(selectedCategory));
-              handleClose();
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Product Filter</DialogTitle>
+        <DialogContent sx={{ width: "400px" }}>
+          <Formik
+            initialValues={{
+              category,
+              minPrice,
+              maxPrice,
             }}
-            variant="contained"
-            color="success"
+            validationSchema={Yup.object({
+              category: Yup.string().trim().oneOf(productCategories),
+              minPrice: Yup.number().min(0),
+              maxPrice: Yup.number().min(0),
+            })}
+            onSubmit={(values) => {
+              if (values.maxPrice < values.minPrice) {
+                dispatch(
+                  openErrorSnackbar("Max price must be greater than min price.")
+                );
+              } else {
+                dispatch(setProductFilter(values));
+                handleClose();
+              }
+            }}
           >
-            Apply
-          </Button>
-        </DialogActions>
+            {({ handleSubmit, touched, errors, getFieldProps }) => (
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "2rem",
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Category
+                  </InputLabel>
+                  <Select label="Category" {...getFieldProps("category")}>
+                    {productCategories.map((item, index) => (
+                      <MenuItem key={index} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {touched.category && errors.category ? (
+                    <FormHelperText error>{errors.category}</FormHelperText>
+                  ) : null}
+                </FormControl>
+
+                <FormControl>
+                  <TextField
+                    label="Min price"
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    {...getFieldProps("minPrice")}
+                  />
+                  {touched.minPrice && errors.minPrice ? (
+                    <FormHelperText error>{errors.minPrice}</FormHelperText>
+                  ) : null}
+                </FormControl>
+
+                <FormControl>
+                  <TextField
+                    label="Max Price"
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    {...getFieldProps("maxPrice")}
+                  />
+                  {touched.maxPrice && errors.maxPrice ? (
+                    <FormHelperText error>{errors.maxPrice}</FormHelperText>
+                  ) : null}
+                </FormControl>
+
+                <Stack alignItems="flex-end">
+                  <Box sx={{ display: "flex", gap: "1rem" }}>
+                    <Button
+                      onClick={handleClose}
+                      variant="contained"
+                      color="error"
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" variant="contained" color="success">
+                      Apply
+                    </Button>
+                  </Box>
+                </Stack>
+              </form>
+            )}
+          </Formik>
+        </DialogContent>
       </Dialog>
     </React.Fragment>
   );
 };
+
 export default ProductFilter;

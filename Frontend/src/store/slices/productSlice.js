@@ -3,38 +3,35 @@ import { createSlice } from "@reduxjs/toolkit";
 export const productSlice = createSlice({
   name: "product",
   initialState: {
-    searchText: null,
-    category: null,
+    searchText: "",
+    category: "",
     minPrice: 0,
     maxPrice: 0,
+    isFilterApplied: false,
   },
   reducers: {
     updateSearchText: (state, action) => {
       state.searchText = action.payload;
     },
-    setCategory: (state, action) => {
-      state.category = action.payload;
+
+    setProductFilter: (state, action) => {
+      state.isFilterApplied = true;
+      state.category = action.payload.category;
+      state.minPrice = action.payload.minPrice;
+      state.maxPrice = action.payload.maxPrice;
     },
-    clearFilter: (state, action) => {
-      state.searchText = null;
-      state.category = null;
-    },
-    setMinPrice: (state, action) => {
-      state.minPrice = +action.payload;
-    },
-    setMaxPrice: (state, action) => {
-      state.maxPrice = +action.payload;
+
+    clearProductFilter: (state, action) => {
+      state.category = "";
+      state.minPrice = 0;
+      state.maxPrice = 0;
+      state.isFilterApplied = false;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  updateSearchText,
-  setCategory,
-  clearFilter,
-  setMinPrice,
-  setMaxPrice,
-} = productSlice.actions;
+export const { updateSearchText, setProductFilter, clearProductFilter } =
+  productSlice.actions;
 
 export default productSlice.reducer;

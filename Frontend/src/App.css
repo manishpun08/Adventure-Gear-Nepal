@@ -27,22 +27,10 @@ ul li {
 /* header part */
 
 .header-upper {
-  align-items: center;
   background-color: var(--color-primary);
-  color: var(--color-white);
 }
 .logo {
   width: 150px;
-}
-.header-upper a {
-  color: var(--color-white);
-}
-.menu {
-  background-color: var(--color-232f3e);
-}
-/* menu dropdown  */
-.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-  min-width: 220px !important;
 }
 
 /* header part end*/
@@ -100,5 +88,5 @@ ul li {
 }
 
 .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-  min-width: 120px !important;
+  min-width: 320px !important;
 }

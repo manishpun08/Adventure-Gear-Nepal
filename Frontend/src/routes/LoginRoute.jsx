@@ -12,7 +12,6 @@ import Order from "../pages/Order";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import ProductDetails from "../pages/ProductDetails";
 import ProductList from "../pages/ProductList";
-import AdminDashboard from "../pages/admin/AdminDashboard";
 
 const LoginRoute = [
   {
@@ -72,10 +71,6 @@ const LoginRoute = [
         element: <Order />,
       },
     ],
-  },
-  {
-    path: "/admin",
-    element: <AdminDashboard />,
   },
 ];
 
