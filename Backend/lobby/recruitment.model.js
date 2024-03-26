@@ -3,17 +3,18 @@ import mongoose from "mongoose";
 // set rules
 const recruitmentSchema = new mongoose.Schema(
   {
-    lobbyId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "lobby",
-    },
-    recruiterId: {
-      // userId
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "users",
-    },
+    // lobbyId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: "lobby",
+    // },
+    // recruiterId: {
+    //   // userId
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: "users",
+    // },
+
     destination: {
       type: String,
       required: true,
@@ -29,27 +30,32 @@ const recruitmentSchema = new mongoose.Schema(
     teammatesCount: {
       type: Number,
       default: "1",
+      required: true,
     },
 
     timePeriod: {
       type: Date,
-      required: true,
+      required: false,
+      default: null,
     },
 
     requirement: {
       type: String,
+      trim: true,
       required: true,
     },
 
     contactNumber: {
       type: Number,
       required: true,
+      minLength: 10,
     },
 
     description: {
       type: String,
+      trim: true,
       required: true,
-      minLength: 100,
+      minLength: 50,
       maxLength: 500,
     },
   },

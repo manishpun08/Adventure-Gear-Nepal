@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ["buyer", "seller", "admin"],
+    enum: ["buyer", "seller"],
   },
 });
 // to remove password field.

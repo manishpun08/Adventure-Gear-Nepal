@@ -90,7 +90,6 @@ router.post("/payment/khalti/verify", isBuyer, async (req, res) => {
       }
     );
 
-    console.log(khaltiResponse);
     // If payment status is not completed
     if (khaltiResponse?.data?.status !== "Completed") {
       return res.status(400).send({ message: "Khalti Payment status failed" });

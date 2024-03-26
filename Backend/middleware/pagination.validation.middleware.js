@@ -21,4 +21,6 @@ export const paginationValidationSchema = Yup.object({
       "Knives & Multitool",
       "Clothes",
     ]),
+  minPrice: Yup.number().min(0),
+  maxPrice: Yup.number().min(0),
 });

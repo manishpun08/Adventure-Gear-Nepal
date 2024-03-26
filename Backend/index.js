@@ -6,7 +6,7 @@ import cartRoutes from "./cart/cart.route.js";
 import cors from "cors";
 import paymentRoutes from "./payment/paymentRoutes.js";
 import orderRoutes from "./order/order.routes.js";
-
+import recruitRoutes from "./lobby/recruit.router.js";
 // my app
 const app = express();
 
@@ -25,6 +25,7 @@ app.use(productRoutes);
 app.use(cartRoutes);
 app.use(paymentRoutes);
 app.use(orderRoutes);
+app.use(recruitRoutes);
 
 // port and server
 const PORT = process.env.API_PORT;
