@@ -34,7 +34,6 @@ const Order = () => {
     },
   });
   const orderList = data?.data?.orderList;
-  console.log(orderList);
 
   if (isLoading) {
     return <Loader />;

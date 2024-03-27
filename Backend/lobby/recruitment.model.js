@@ -20,20 +20,20 @@ const recruitmentSchema = new mongoose.Schema(
       required: true,
     },
 
-    adventureType: {
+    adventure: {
       type: String,
       required: true,
       trim: true,
-      enum: ["trek", "camp"],
+      enum: ["Trek", "Camp"],
     },
 
-    teammatesCount: {
+    teamCount: {
       type: Number,
       default: "1",
-      required: true,
+      required: false,
     },
 
-    timePeriod: {
+    date: {
       type: Date,
       required: false,
       default: null,
@@ -57,6 +57,16 @@ const recruitmentSchema = new mongoose.Schema(
       required: true,
       minLength: 50,
       maxLength: 500,
+    },
+    image: {
+      type: String,
+      trim: true,
+      required: false,
+      default: null,
+    },
+    memberIds: {
+      type: [mongoose.ObjectId],
+      ref: "users",
     },
   },
   {

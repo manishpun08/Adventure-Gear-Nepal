@@ -2,18 +2,17 @@ import * as Yup from "yup";
 import dayjs from "dayjs";
 
 const currentDate = dayjs();
+
 export let recruitmentValidation = Yup.object({
   destination: Yup.string().required("Destination is required."),
-  adventureType: Yup.string()
+  adventure: Yup.string()
     .required("Adventure type is required.")
     .trim()
-    .oneOf(["trek", "camp"]),
-  teammatesCount: Yup.number()
+    .oneOf(["Trek", "Camp"]),
+  teamCount: Yup.number()
     .required("Team Count is required.")
     .min(1, "Teammate count must be at least 1."),
-  timePeriod: Yup.date()
-    .nullable()
-    .min(currentDate, "Date cannot be past dates."),
+  date: Yup.date().min(currentDate, "Date cannot be past dates."),
   requirement: Yup.string().required("Requirement is required.").trim(),
   contactNumber: Yup.number()
     .required("Contact number is required.")
@@ -23,4 +22,5 @@ export let recruitmentValidation = Yup.object({
     .trim()
     .min(50, "Description must be at least 50 character.")
     .max(500, "Description must be at max of 500 character."),
+  image: Yup.string().nullable().trim(),
 });

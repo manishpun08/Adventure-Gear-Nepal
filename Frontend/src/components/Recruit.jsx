@@ -10,13 +10,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { styled } from "@mui/material/styles";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import $axios from "../lib/axios.instance";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
+import styled from "@emotion/styled";
+import axios from "axios";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -30,30 +36,49 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 const Recruit = () => {
+  const currentDate = dayjs();
+
+  const navigate = useNavigate();
+  // for cloudniary image
   const [destinationImage, setDestinationImage] = useState(null);
   const [localUrl, setLocalUrl] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
+
+  // api hit
+  const { mutate } = useMutation({
+    mutationKey: ["add-recruitment"],
+    mutationFn: async (values) => {
+      return await $axios.post("/recruit/add", values);
+    },
+    onSuccess: (res) => {
+      navigate("/lobby");
+      console.log("success");
+    },
+    onError: (error) => {
+      console.log(error?.response?.data?.message);
+    },
+  });
   if (imageLoading) {
     return <Loader />;
   }
+
   return (
     <div>
       <Box
         sx={{
           display: "flex",
-          // flexDirection: "column",
           justifyContent: "center",
         }}
       >
         <Formik
           initialValues={{
             destination: "",
-            requirement: "",
-            teamCount: 1,
-            timePeriod: 1,
             adventure: "",
-            description: "",
+            teamCount: "",
+            date: "",
+            requirement: "",
             contactNumber: "",
+            description: "",
             image: null,
           }}
           validationSchema={Yup.object({
@@ -61,27 +86,27 @@ const Recruit = () => {
               .required("Destination is required.")
               .trim()
               .max(55, "Destination must be at max of 55 characters."),
+            adventure: Yup.string()
+              .oneOf(["trek", "camp"])
+              .required("At least select 1 adventure."),
+            teamCount: Yup.number()
+              .required("Team Count is required")
+              .min(1, "Team Count must be at least 1."),
+            date: Yup.date()
+              .required("Date is required")
+              .min(currentDate, "Date cannot be past dates."),
             requirement: Yup.string()
               .required("Requirement is required.")
               .trim()
               .max(55, "Requirement must be at max of 55 characters."),
-            teamCount: Yup.number()
-              .required("Team Count is required")
-              .min(1, "Team Count must be at least 1."),
-
-            timePeriod: Yup.number()
-              .required("Time Period is required")
-              .min(1, "Time Period must be at least 1."),
-            contactNumber: Yup.number().required("Contact Number is required"),
-            adventure: Yup.string()
-              .oneOf(["trek", "camp"])
-              .required("At least select 1 adventure."),
+            contactNumber: Yup.number()
+              .required("Contact Number is required")
+              .min(10, "Contact Number must be 10 digits."),
             description: Yup.string()
               .required("Description is required.")
-              .min(100, "Description is at least of 100 character.")
+              .min(50, "Description is at least of 50 character.")
               .max(500, "Description is at most of 500 character.")
               .trim(),
-
             image: Yup.string().trim().nullable(),
           })}
           onSubmit={async (values) => {
@@ -112,7 +137,7 @@ const Recruit = () => {
               }
             }
             values.image = imageUrl;
-            console.log(values);
+            mutate(values);
           }}
         >
           {(formik) => (
@@ -131,7 +156,6 @@ const Recruit = () => {
               <Typography variant="h5" textAlign="center">
                 Add Recruitment
               </Typography>
-
               {destinationImage && (
                 <Stack sx={{ height: "300px" }}>
                   <img src={localUrl} style={{ height: "100%" }} />
@@ -156,7 +180,6 @@ const Recruit = () => {
                   />
                 </Button>
               </FormControl>
-
               <Stack direction="row" spacing={2}>
                 <FormControl sx={{ width: "210px" }}>
                   <InputLabel required>Adventure</InputLabel>
@@ -164,8 +187,8 @@ const Recruit = () => {
                     label="Adventure"
                     {...formik.getFieldProps("adventure")}
                   >
-                    <MenuItem value={"trek"}>Trek</MenuItem>
-                    <MenuItem value={"camp"}>Camp</MenuItem>
+                    <MenuItem value={"Trek"}>Trek</MenuItem>
+                    <MenuItem value={"Camp"}>Camp</MenuItem>
                   </Select>
                   {formik.touched.adventure && formik.errors.adventure ? (
                     <FormHelperText error>
@@ -189,7 +212,7 @@ const Recruit = () => {
               </Stack>
 
               <Stack direction="row" spacing={2}>
-                <FormControl>
+                <FormControl sx={{ width: "210px" }}>
                   <TextField
                     required
                     label="Team Count"
@@ -202,23 +225,27 @@ const Recruit = () => {
                     </FormHelperText>
                   ) : null}
                 </FormControl>
+                {/* date \ */}
                 <FormControl>
-                  <TextField
-                    required
-                    label="Time Period"
-                    type="number"
-                    {...formik.getFieldProps("timePeriod")}
-                  />
-                  {formik.touched.timePeriod && formik.errors.timePeriod ? (
-                    <FormHelperText error>
-                      {formik.errors.timePeriod}
-                    </FormHelperText>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disablePast
+                      label="Date"
+                      value={formik.values.timePeriod}
+                      onChange={(date) => {
+                        formik.setFieldValue("date", date);
+                      }}
+                      textField={(props) => <TextField {...props} />}
+                    />
+                  </LocalizationProvider>
+                  {formik.touched.date && formik.errors.date ? (
+                    <FormHelperText error>{formik.errors.date}</FormHelperText>
                   ) : null}
                 </FormControl>
               </Stack>
 
               <Stack direction="row" spacing={2}>
-                <FormControl>
+                <FormControl sx={{ width: "210px" }}>
                   <TextField
                     required
                     label="Requirement"
