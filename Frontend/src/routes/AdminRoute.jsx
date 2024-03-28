@@ -1,6 +1,7 @@
 import AdminAuthGuard from "../Guards/AdminAuthGuard";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminLogin from "../pages/admin/AdminLogin";
 import Categories from "../pages/admin/Categories";
 import Orders from "../pages/admin/Orders";
 import Products from "../pages/admin/Products";
@@ -8,7 +9,11 @@ import Products from "../pages/admin/Products";
 const AdminRoute = [
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <AdminAuthGuard>
+        <AdminLayout />
+      </AdminAuthGuard>
+    ),
     children: [
       {
         index: true,
@@ -30,7 +35,7 @@ const AdminRoute = [
   },
   {
     path: "/admin/login",
-    element: <p>Admin Login</p>,
+    element: <AdminLogin />,
   },
 ];
 
