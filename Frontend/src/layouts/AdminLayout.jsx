@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ProductionQuantityLimitsOutlinedIcon from "@mui/icons-material/ProductionQuantityLimitsOutlined";
 import { GridViewRounded } from "@mui/icons-material";
@@ -7,8 +7,14 @@ import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined
 import SubscriptionsRoundedIcon from "@mui/icons-material/SubscriptionsRounded";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
+import { getAdminFullName } from "../utils/general.function";
+import { Menu, MenuItem, Typography } from "@mui/material";
 
 function Header() {
+  const adminFullname = getAdminFullName();
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -33,6 +39,10 @@ function Header() {
           flexDirection: "column",
           alignItems: "center",
           gap: 8,
+          cursor: "pointer",
+        }}
+        onClick={(event) => {
+          setAnchorElUser(event.currentTarget);
         }}
       >
         <img
@@ -41,8 +51,37 @@ function Header() {
           width={40}
           style={{ borderRadius: 99999 }}
         />
-        <p style={{ fontSize: 14 }}>Test Admin</p>
+        <p style={{ fontSize: 14 }}>{adminFullname}</p>
       </div>
+      <Menu
+        sx={{ mt: "55px", zIndex: 99999999 }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={() => {
+          setAnchorElUser(null);
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem("admin-token");
+            localStorage.removeItem("admin-firstName");
+            localStorage.removeItem("admin-lastName");
+            navigate("/admin/login");
+          }}
+        >
+          <Typography textAlign="center">Logout</Typography>
+        </MenuItem>
+      </Menu>
     </div>
   );
 }
