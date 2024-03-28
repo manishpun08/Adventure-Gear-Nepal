@@ -59,32 +59,35 @@ router.get("/recruit/get/list", async (req, res) => {
   });
 });
 
-// add member
-router.post("/lobby/add", isUser, async (req, res) => {
-  const userProfile = await User.aggregate([
-    {
-      $match: { userId: req.loggedInUserId },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "userDetails",
-      },
-    },
-    {
-      $project: {
-        firstName: 1,
-        lastName: 1,
-      },
-    },
-  ]);
+// add member to lobby
+router.get("/lobby/add", isUser, async (req, res) => {
+  // const { email } = req.body;
+  // const user = await User.findOne({ email });
+  // const userProfile = await User.aggregate([
+  //   {
+  //     $match: { userId: req.loggedInUserId },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "users",
+  //       localField: "userId",
+  //       foreignField: "_id",
+  //       as: "userDetails",
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       firstName: 1,
+  //       lastName: 1,
+  //       role: 1,
+  //     },
+  //   },
+  // ]);
 
-  console.log(userProfile);
+  console.log(user);
   return res
     .status(200)
-    .send({ message: "User is added to lobby successfully.", userProfile });
+    .send({ message: "User is added to lobby successfully." });
 });
 
 // get member list
