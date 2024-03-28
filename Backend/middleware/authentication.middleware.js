@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../user/user.model.js";
+import Admin from "../admin/admin.model.js";
 
 // check if the role is admin
 export const isAdmin = async (req, res, next) => {
@@ -24,22 +25,16 @@ export const isAdmin = async (req, res, next) => {
       return res.status(401).send({ message: "Unauthorized." });
     }
   }
-  // find user using userId from payload
-  const user = await User.findOne({ _id: payload.userId });
-  // if not user, throw error
-  if (!user) {
-    {
-      return res.status(401).send({ message: "Unauthorized." });
-    }
-  }
-  // user role must be seller
-  if (user.role !== "seller") {
+  // find admin using adminId from payload
+  const admin = await Admin.findOne({ _id: payload.adminId });
+  // if not admin, throw error
+  if (!admin) {
     {
       return res.status(401).send({ message: "Unauthorized." });
     }
   }
 
-  req.loggedInUserId = user._id;
+  req.loggedInAdminId = admin._id;
 
   // call next function
   next();
