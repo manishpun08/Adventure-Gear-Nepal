@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { adminReqBodyValidation } from "../middleware/reqBodyAdmin.middleware.js";
 import { generateHashPassword } from "../utils/password.function.js";
+import { isAdmin } from "../middleware/authentication.middleware.js";
+import Product from "../product/product.model.js";
+import User from "../user/user.model.js";
 
 const router = express.Router();
 
@@ -98,6 +101,46 @@ router.post(
     return res
       .status(200)
       .send({ message: "success", admin: admin, token: token });
+  }
+);
+
+// get admin dashboard
+router.get(
+  "/admin/dashboard",
+
+  // authenticating admin
+  isAdmin,
+
+  // getting admin dashboard function
+  async (_, res) => {
+    const totalProducts = await Product.countDocuments();
+    const totalSellers = await User.countDocuments({ role: "seller" });
+    const totalBuyers = await User.countDocuments({ role: "buyer" });
+    const latest4Products = await Product.find().sort({ _id: -1 }).limit(4);
+    const categProductsCount = await Product.find().then((products) =>
+      products.reduce((acc, cur) => {
+        const categEntryIndex = acc.findIndex((c) => c.name == cur.category);
+        if (categEntryIndex == -1) {
+          acc.push({ name: cur.category, count: 1 });
+        } else {
+          acc[categEntryIndex].count++;
+        }
+
+        return acc;
+      }, [])
+    );
+
+    // send dashboard data as response
+    return res.status(200).send({
+      message: "success",
+      dashboard: {
+        totalProducts,
+        totalSellers,
+        totalBuyers,
+        latest4Products,
+        categProductsCount,
+      },
+    });
   }
 );
 

@@ -189,10 +189,16 @@ const AdminLayout = () => {
       <div style={{ display: "flex", flexGrow: 1 }}>
         <Sidebar />
         <div
-          style={{ flexGrow: 1, backgroundColor: "#F8F8FA", color: "#404A58" }}
+          style={{
+            flexGrow: 1,
+            backgroundColor: "#F8F8FA",
+            color: "#404A58",
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
           <Header />
-          <div style={{ padding: 20 }}>
+          <div style={{ padding: 20, height: "100%" }}>
             <Outlet />
           </div>
         </div>

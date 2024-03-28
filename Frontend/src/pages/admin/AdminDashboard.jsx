@@ -1,6 +1,13 @@
 import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useQuery } from "react-query";
+import $axios from "../../lib/axios.instance";
+import LoadingIndicator from "./LoadingIndicator";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import CategoryIcon from "@mui/icons-material/Category";
 
 function StatEntry({ title, value, icon, divStyle }) {
   return (
@@ -98,6 +105,18 @@ function StatCard({ title, children, style }) {
 }
 
 const AdminDashboard = () => {
+  const { isLoading, data } = useQuery({
+    queryKey: ["admin-dashboard"],
+    queryFn: async () => {
+      return await $axios.get("/admin/dashboard");
+    },
+  });
+  const dashboardData = data?.data?.dashboard;
+
+  if (isLoading) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
@@ -111,8 +130,8 @@ const AdminDashboard = () => {
         >
           <StatEntry
             title="Total Products"
-            value={100}
-            icon={null}
+            value={dashboardData.totalProducts}
+            icon={<InventoryIcon htmlColor="white" fontSize="large" />}
             divStyle={{
               backgroundColor: "#875fc0",
               backgroundImage:
@@ -121,8 +140,8 @@ const AdminDashboard = () => {
           />
           <StatEntry
             title="Total Sellers"
-            value={8}
-            icon={null}
+            value={dashboardData.totalSellers}
+            icon={<StorefrontIcon htmlColor="white" fontSize="large" />}
             divStyle={{
               backgroundColor: "#47c5f4",
               backgroundImage:
@@ -131,8 +150,8 @@ const AdminDashboard = () => {
           />
           <StatEntry
             title="Total Buyers"
-            value={24}
-            icon={null}
+            value={dashboardData.totalBuyers}
+            icon={<ShoppingBagIcon htmlColor="white" fontSize="large" />}
             divStyle={{
               backgroundColor: "#eb4786",
               backgroundImage:
@@ -141,8 +160,8 @@ const AdminDashboard = () => {
           />
           <StatEntry
             title="Total Categories"
-            value={6}
-            icon={null}
+            value={dashboardData.latest4Products.length}
+            icon={<CategoryIcon htmlColor="white" fontSize="large" />}
             divStyle={{
               backgroundColor: "#ffb72c",
               backgroundImage:
@@ -155,8 +174,16 @@ const AdminDashboard = () => {
             series={[
               {
                 data: [
-                  { id: 0, value: 10, label: "Products" },
-                  { id: 1, value: 15, label: "Sellers" },
+                  {
+                    id: 0,
+                    value: dashboardData.totalProducts,
+                    label: "Products",
+                  },
+                  {
+                    id: 1,
+                    value: dashboardData.totalSellers,
+                    label: "Sellers",
+                  },
                 ],
               },
             ]}
@@ -173,15 +200,7 @@ const AdminDashboard = () => {
           xAxis={[
             {
               scaleType: "band",
-              data: [
-                "Bagpacks",
-                "Trekking Poles",
-                "Water Bottles & Filters",
-                "Watches",
-                "Camp Kitchen",
-                "Headwear",
-                "Climbing Equipment",
-              ],
+              data: dashboardData.categProductsCount.map((c) => c.name),
               tickLabelStyle: {
                 fontSize: "10px",
                 width: "50px",
@@ -189,89 +208,43 @@ const AdminDashboard = () => {
               },
             },
           ]}
-          series={[{ data: [4, 3, 5, 5, 2, 3, 5] }]}
+          series={[
+            { data: dashboardData.categProductsCount.map((c) => c.count) },
+          ]}
         />
       </StatCard>
-      <StatCard title={"Top 4 products"}>
+      <StatCard title={"Latest 4 products"}>
         <div
           style={{ display: "flex", gap: 20, justifyContent: "space-between" }}
         >
-          <div
-            style={{
-              padding: 20,
-              borderRadius: 6,
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              border: "1px solid #dee2e6",
-            }}
-          >
-            <img
-              src={
-                "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp"
-              }
-              height={200}
-              width={"100%"}
-              style={{ objectFit: "contain" }}
-            />
-            <p style={{ color: "#3D4B64", fontWeight: "bold" }}>Rs. 10,000</p>
-            <p style={{ marginTop: 5 }}>Vermont Classic</p>
-          </div>
-          <div
-            style={{
-              padding: 20,
-              borderRadius: 6,
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              border: "1px solid #dee2e6",
-            }}
-          >
-            <img
-              src={
-                "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp"
-              }
-              height={200}
-              width={"100%"}
-              style={{ objectFit: "contain" }}
-            />
-            <p style={{ color: "#3D4B64", fontWeight: "bold" }}>Rs. 10,000</p>
-            <p style={{ marginTop: 5 }}>Vermont Classic</p>
-          </div>
-          <div
-            style={{
-              padding: 20,
-              borderRadius: 6,
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              border: "1px solid #dee2e6",
-            }}
-          >
-            <img
-              src={
-                "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp"
-              }
-              height={200}
-              width={"100%"}
-              style={{ objectFit: "contain" }}
-            />
-            <p style={{ color: "#3D4B64", fontWeight: "bold" }}>Rs. 10,000</p>
-            <p style={{ marginTop: 5 }}>Vermont Classic</p>
-          </div>
-          <div
-            style={{
-              padding: 20,
-              borderRadius: 6,
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-              border: "1px solid #dee2e6",
-            }}
-          >
-            <img
-              src={
-                "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp"
-              }
-              height={200}
-              width={"100%"}
-              style={{ objectFit: "contain" }}
-            />
-            <p style={{ color: "#3D4B64", fontWeight: "bold" }}>Rs. 10,000</p>
-            <p style={{ marginTop: 5 }}>Vermont Classic</p>
-          </div>
+          {dashboardData.latest4Products.map((p) => (
+            <a
+              key={p._id}
+              href={`/productDetails/${p._id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div
+                style={{
+                  padding: 20,
+                  borderRadius: 6,
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  border: "1px solid #dee2e6",
+                }}
+              >
+                <img
+                  src={p.image}
+                  height={200}
+                  width={"100%"}
+                  style={{ objectFit: "contain" }}
+                />
+                <p style={{ color: "#3D4B64", fontWeight: "bold" }}>
+                  Rs. {p.price}
+                </p>
+                <p style={{ marginTop: 5, color: "black" }}>{p.name}</p>
+              </div>
+            </a>
+          ))}
         </div>
       </StatCard>
     </div>
