@@ -1,5 +1,6 @@
 import AuthGuard from "../Guards/AuthGuard";
 import EditProduct from "../components/EditProduct";
+import LobbyDetail from "../components/LobbyDetail";
 import Recruit from "../components/Recruit";
 import MainLayout from "../layouts/MainLayout";
 import About from "../pages/About";

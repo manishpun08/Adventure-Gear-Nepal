@@ -65,10 +65,8 @@ const Register = () => {
           display: "flex",
           flexDirection: "column",
           width: "380px",
-          minHeight: "80vh",
-          marginLeft: "38%",
-          marginTop: "1rem",
-          marginBottom: "1rem",
+          minHeight: "140vh",
+          margin: "0 auto",
         }}
       >
         {isLoading && <LinearProgress color="secondary" />}
@@ -132,6 +130,7 @@ const Register = () => {
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                 width: "380px",
                 borderRadius: "10px",
+                transform: "translateY(5%)",
               }}
             >
               <Typography variant="h5" textAlign="center">

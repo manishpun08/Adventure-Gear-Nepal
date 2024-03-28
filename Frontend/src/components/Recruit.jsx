@@ -87,7 +87,7 @@ const Recruit = () => {
               .trim()
               .max(55, "Destination must be at max of 55 characters."),
             adventure: Yup.string()
-              .oneOf(["trek", "camp"])
+              .oneOf(["Trek", "Camp"])
               .required("At least select 1 adventure."),
             teamCount: Yup.number()
               .required("Team Count is required")

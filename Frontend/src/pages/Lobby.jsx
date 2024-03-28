@@ -9,7 +9,8 @@ const Lobby = () => {
       <Typography
         variant="h4"
         fontWeight="700"
-        sx={{ borderBottom: "2px solid #ddd" }}
+        textAlign="center"
+        sx={{ borderBottom: "2px solid #ddd", color: "#01579B" }}
       >
         Recruitment Lobby List
       </Typography>

@@ -39,11 +39,7 @@ function stringAvatar(name) {
   };
 }
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-// const settings = [
-//   { id: 1, name: "Profile" },
-//   { id: 2, name: "Logout" },
-// ];
+const settings = ["Profile", "Logout"];
 
 const CustomAvatar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -58,16 +54,11 @@ const CustomAvatar = () => {
   };
   const fullName = getFullName();
   return (
-    // <Stack direction="row" spacing={2}>
-    // </Stack>
-
     <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-          <Avatar {...stringAvatar(fullName)} />
-        </IconButton>
-      </Tooltip>
+      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+        {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+        <Avatar {...stringAvatar(fullName)} />
+      </IconButton>
       <Menu
         sx={{ mt: "45px" }}
         id="menu-appbar"

@@ -9,6 +9,7 @@ import {
   InputLabel,
   LinearProgress,
   OutlinedInput,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -41,7 +42,6 @@ const Login = () => {
       localStorage.setItem("firstName", response?.data?.user?.firstName);
       localStorage.setItem("lastName", response?.data?.user?.lastName);
       navigate("/home");
-      
     },
 
     // on error
@@ -64,8 +64,8 @@ const Login = () => {
           flexDirection: "column",
           width: "350px",
           minHeight: "80vh",
-          marginLeft: "38%",
-          marginTop: "10%",
+          margin: "0 auto",
+          transform: "translateY(20%)",
         }}
       >
         {isLoading && <LinearProgress color="secondary" />}
@@ -146,12 +146,18 @@ const Login = () => {
               <Button type="submit" variant="contained" color="info">
                 Log In
               </Button>
-
-              <Link to="/register">
-                <Typography variant="subtitle2" textAlign="center">
-                  New here? Register
-                </Typography>
-              </Link>
+              <Stack direction="row" justifyContent="space-between">
+                <Link to="/register">
+                  <Typography variant="subtitle2" textAlign="center">
+                    New here? Register
+                  </Typography>
+                </Link>
+                <Link to="/forgot-password">
+                  <Typography variant="subtitle2" textAlign="center">
+                    Forget Password
+                  </Typography>
+                </Link>
+              </Stack>
             </form>
           )}
         </Formik>
