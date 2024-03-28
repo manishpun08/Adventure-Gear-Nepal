@@ -144,4 +144,32 @@ router.get(
   }
 );
 
+// get all products
+router.get(
+  "/admin/products",
+
+  // authenticating admin
+  isAdmin,
+
+  // getting admin all products function
+  async (_, res) => {
+    const allProducts = await Product.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "sellerId",
+          foreignField: "_id",
+          as: "seller",
+        },
+      },
+    ]);
+
+    // send all products data as response
+    return res.status(200).send({
+      message: "success",
+      allProducts,
+    });
+  }
+);
+
 export default router;

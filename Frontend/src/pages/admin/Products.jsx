@@ -4,82 +4,30 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useQuery } from "react-query";
+import $axios from "../../lib/axios.instance";
+import LoadingIndicator from "./LoadingIndicator";
 
 const Products = () => {
-  const rows = [
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
+  const { isLoading, data } = useQuery({
+    queryKey: ["admin-all-products"],
+    queryFn: async () => {
+      return await $axios.get("/admin/products");
     },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      name: "Vermont Classic",
-      category: "Eyewear",
-      seller: "Manish",
-      price: "10,000",
-    },
-  ];
+  });
+  const allProducts = data?.data?.allProducts;
+
+  if (isLoading) {
+    return <LoadingIndicator />;
+  }
+
+  const rows = allProducts.map((p) => ({
+    image: p.image,
+    name: p.name,
+    category: p.category,
+    seller: `${p.seller.at(0)?.firstName} ${p.seller.at(0)?.lastName}`,
+    price: p.price,
+  }));
 
   return (
     <div
@@ -93,7 +41,7 @@ const Products = () => {
         <p style={{ color: "black", fontSize: "1.5rem" }}>
           All Products{" "}
           <span style={{ fontSize: "1rem", color: "#666666" }}>
-            (28 results)
+            ({rows.length} results)
           </span>
         </p>
       </div>
