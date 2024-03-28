@@ -8,6 +8,7 @@ import { generateHashPassword } from "../utils/password.function.js";
 import { isAdmin } from "../middleware/authentication.middleware.js";
 import Product from "../product/product.model.js";
 import User from "../user/user.model.js";
+import Order from "../order/order.model.js";
 
 const router = express.Router();
 
@@ -168,6 +169,50 @@ router.get(
     return res.status(200).send({
       message: "success",
       allProducts,
+    });
+  }
+);
+
+// get all orders
+router.get(
+  "/admin/orders",
+
+  // authenticating admin
+  isAdmin,
+
+  // getting admin all orders function
+  async (_, res) => {
+    const allOrders = await Order.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "sellerId",
+          foreignField: "_id",
+          as: "seller",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "buyerId",
+          foreignField: "_id",
+          as: "buyer",
+        },
+      },
+    ]);
+
+    // send all orders data as response
+    return res.status(200).send({
+      message: "success",
+      allOrders,
     });
   }
 );

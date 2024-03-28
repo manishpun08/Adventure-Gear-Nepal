@@ -4,106 +4,34 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useQuery } from "react-query";
+import $axios from "../../lib/axios.instance";
+import LoadingIndicator from "./LoadingIndicator";
 
 const Orders = () => {
-  const rows = [
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
+  const { isLoading, data } = useQuery({
+    queryKey: ["admin-all-orders"],
+    queryFn: async () => {
+      return await $axios.get("/admin/orders");
     },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-    {
-      image:
-        "https://res.cloudinary.com/du65q3gjv/image/upload/v1710858941/lgaaxbgovr9yvvexou27.webp",
-      productName: "Vermont Classic",
-      orderQuantity: 10,
-      unitPrice: 100,
-      buyerName: "Foo Bar",
-      buyerEmail: "foo@bar.com",
-      paymentStatus: "Completed",
-      sellerName: "Bar Buzz",
-      sellerEmail: "bar@buzz.com",
-    },
-  ];
+  });
+  const allOrders = data?.data?.allOrders;
+
+  if (isLoading) {
+    return <LoadingIndicator />;
+  }
+
+  const rows = allOrders.map((o) => ({
+    image: o.product.at(0)?.image,
+    productName: o.product.at(0)?.name,
+    orderQuantity: o.orderQuantity,
+    unitPrice: o.unitPrice,
+    buyerName: `${o.buyer.at(0)?.firstName} ${o.buyer.at(0)?.lastName}`,
+    buyerEmail: o.buyer.at(0)?.email,
+    paymentStatus: o.paymentStatus,
+    sellerName: `${o.seller.at(0)?.firstName} ${o.seller.at(0)?.lastName}`,
+    sellerEmail: o.seller.at(0)?.email,
+  }));
 
   return (
     <div
@@ -117,7 +45,7 @@ const Orders = () => {
         <p style={{ color: "black", fontSize: "1.5rem" }}>
           All Orders{" "}
           <span style={{ fontSize: "1rem", color: "#666666" }}>
-            (28 results)
+            ({rows.length} results)
           </span>
         </p>
       </div>
