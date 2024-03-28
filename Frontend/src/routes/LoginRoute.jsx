@@ -73,10 +73,6 @@ const LoginRoute = [
       },
     ],
   },
-  {
-    path: "/admin",
-    element: <AdminDashboard />,
-  },
 ];
 
 export default LoginRoute;
