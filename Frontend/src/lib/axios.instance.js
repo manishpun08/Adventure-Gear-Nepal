@@ -8,7 +8,12 @@ const $axios = axios.create({
 // Add a request interceptor
 $axios.interceptors.request.use(function (config) {
   // Do something before request is sent
-  const token = localStorage.getItem("token");
+  let token;
+  if (config.url.startsWith("/admin")) {
+    token = localStorage.getItem("admin-token");
+  } else {
+    token = localStorage.getItem("token");
+  }
   // token xa vane
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

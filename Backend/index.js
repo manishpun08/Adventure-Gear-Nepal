@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./connect.db.js";
 import userRoutes from "./user/user.routes.js";
+import adminRoutes from "./admin/admin.routes.js";
 import productRoutes from "./product/product.routes.js";
 import cartRoutes from "./cart/cart.route.js";
 import cors from "cors";
@@ -23,6 +24,7 @@ connectDB();
 
 // register routes
 app.use(userRoutes);
+app.use(adminRoutes);
 app.use(productRoutes);
 app.use(cartRoutes);
 app.use(paymentRoutes);
