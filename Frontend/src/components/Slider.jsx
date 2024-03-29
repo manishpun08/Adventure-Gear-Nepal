@@ -10,8 +10,10 @@ import "swiper/css/navigation";
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Slider = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Swiper
@@ -37,7 +39,13 @@ const Slider = () => {
             <Typography variant="h5" pb={2} sx={{ width: 300 }}>
               BAGPACKS FOR YOU NEXT ADVENTURE
             </Typography>
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                navigate("/product");
+              }}
+            >
               Order online
             </Button>
           </Box>

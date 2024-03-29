@@ -14,9 +14,14 @@ export let recruitmentValidation = Yup.object({
     .min(1, "Teammate count must be at least 1."),
   date: Yup.date().min(currentDate, "Date cannot be past dates."),
   requirement: Yup.string().required("Requirement is required.").trim(),
-  contactNumber: Yup.number()
-    .required("Contact number is required.")
-    .min(10, "Contact Number must be 10 number."),
+
+  contactNumber: Yup.string()
+    .required("Contact Number is required")
+    .matches(
+      /^[0-9]{10}$/,
+      "Contact Number must be Number and exactly 10 digits."
+    ),
+
   description: Yup.string()
     .required("Description is required.")
     .trim()

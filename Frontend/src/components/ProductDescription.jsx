@@ -107,7 +107,6 @@ const ProductDescription = (props) => {
       dispatch(openSuccessSnackbar(res?.data?.message));
     },
     onError: (error) => {
-      // console.log("error");
       dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });

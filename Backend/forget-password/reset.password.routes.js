@@ -35,7 +35,6 @@ router.post(
   async (req, res) => {
     // extract email from req.body
     const { email } = req.body;
-    console.log(email);
 
     // find user using email
     const user = await User.findOne({ email });

@@ -52,7 +52,6 @@ router.get("/recruit/get/list", async (req, res) => {
       },
     },
   ]);
-  console.log(recruitList);
   return res.status(200).send({
     message: "Recruitment list is displayed successfully.",
     recruitList,
@@ -84,7 +83,6 @@ router.get("/lobby/add", isUser, async (req, res) => {
   //   },
   // ]);
 
-  console.log(user);
   return res
     .status(200)
     .send({ message: "User is added to lobby successfully." });

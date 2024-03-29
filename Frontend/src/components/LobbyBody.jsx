@@ -62,12 +62,24 @@ const LobbyBody = () => {
         {recruitList?.map((item) => {
           return (
             <>
-              <Typography variant="h5" fontWeight="600" mt={2} mb={2}>
-                Trip to {item?.destination}{" "}
-                <span style={{ fontSize: "24px", textTransform: "capitalize" }}>
-                  ({item?.adventure})
-                </span>
-              </Typography>
+              <Stack
+                direction="row"
+                mt={2}
+                mb={2}
+                justifyContent="space-between"
+              >
+                <Typography variant="h5" fontWeight="600">
+                  Trip to {item?.destination}{" "}
+                  <span
+                    style={{ fontSize: "24px", textTransform: "capitalize" }}
+                  >
+                    ({item?.adventure})
+                  </span>
+                </Typography>
+                <Typography variant="h5" fontWeight="600" paddingRight={25}>
+                  Expires in: 6 Day
+                </Typography>
+              </Stack>
 
               <Stack
                 direction="row"
@@ -113,7 +125,7 @@ const LobbyBody = () => {
                     src={userProfileBackup}
                     alt=""
                   />
-                </Box>{" "}
+                </Box>
                 <Box
                   height={160}
                   width={160}
@@ -127,7 +139,7 @@ const LobbyBody = () => {
                     src={userProfileBackup}
                     alt=""
                   />
-                </Box>{" "}
+                </Box>
                 <Box
                   height={160}
                   width={160}
@@ -168,6 +180,5 @@ const LobbyBody = () => {
     </>
   );
 };
-
 
 export default LobbyBody;

@@ -1,6 +1,4 @@
-import React from "react";
-import { Field, Formik } from "formik";
-import * as Yup from "yup";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,15 +14,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { useMutation } from "react-query";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import axios from "axios";
+import dayjs from "dayjs";
+import { Formik } from "formik";
+import React from "react";
+import { useMutation } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const Register = () => {
   // using navigate
@@ -247,6 +246,7 @@ const Register = () => {
                   <FormHelperText error>{formik.errors.gender}</FormHelperText>
                 ) : null}
               </FormControl>
+
               {/* dob */}
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

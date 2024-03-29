@@ -3,13 +3,7 @@ import mongoose from "mongoose";
 // set rules
 const recruitmentSchema = new mongoose.Schema(
   {
-    // lobbyId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: "lobby",
-    // },
     // recruiterId: {
-    //   // userId
     //   type: mongoose.Schema.Types.ObjectId,
     //   required: true,
     //   ref: "users",
@@ -48,7 +42,7 @@ const recruitmentSchema = new mongoose.Schema(
     contactNumber: {
       type: Number,
       required: true,
-      minLength: 10,
+      min: 1000000000,
     },
 
     description: {

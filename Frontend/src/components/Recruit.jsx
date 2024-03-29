@@ -99,9 +99,13 @@ const Recruit = () => {
               .required("Requirement is required.")
               .trim()
               .max(55, "Requirement must be at max of 55 characters."),
-            contactNumber: Yup.number()
+            contactNumber: Yup.string()
               .required("Contact Number is required")
-              .min(10, "Contact Number must be 10 digits."),
+              .matches(
+                /^[0-9]{10}$/,
+                "Contact Number must be Number and exactly 10 digits."
+              ),
+
             description: Yup.string()
               .required("Description is required.")
               .min(50, "Description is at least of 50 character.")
@@ -257,11 +261,12 @@ const Recruit = () => {
                     </FormHelperText>
                   ) : null}
                 </FormControl>
+
                 <FormControl>
                   <TextField
                     required
                     label="Contact Number"
-                    type="number"
+                    type="text"
                     {...formik.getFieldProps("contactNumber")}
                   />
                   {formik.touched.contactNumber &&

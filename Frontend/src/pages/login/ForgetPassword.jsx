@@ -59,17 +59,25 @@ const ForgetPassword = () => {
                 gap: "1rem",
                 padding: "2rem",
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                width: "350px",
+                width: "400px",
                 borderRadius: "10px",
               }}
             >
-              <Typography variant="h5" textAlign="center">
-                Forget Password
+              <Typography
+                variant="h5"
+                fontWeight={800}
+                sx={{ color: "#232f3e" }}
+                textAlign="center"
+              >
+                Forget Password?
               </Typography>
-              <Typography textAlign="center">{`Enter your email below and we'll send you password reset OTP `}</Typography>
+              <Typography
+                variant="body2"
+                textAlign="center"
+              >{`Enter your email below and we'll send you password reset OTP `}</Typography>
               <FormControl>
                 <TextField
-                  label="Email"
+                  label="Email Address"
                   {...formik.getFieldProps("email")}
                 ></TextField>
                 {formik.touched.email && formik.errors.email ? (
@@ -80,6 +88,16 @@ const ForgetPassword = () => {
               <Button type="submit" variant="contained" color="info">
                 Send Email
               </Button>
+              <Link to="/login">
+                <Typography
+                  variant="subtitle2"
+                  borderTop="1px solid #ddd"
+                  textAlign="center"
+                  lineHeight={4}
+                >
+                  Already have an account?
+                </Typography>
+              </Link>
             </form>
           )}
         </Formik>

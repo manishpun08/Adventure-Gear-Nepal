@@ -23,7 +23,7 @@ export const sendEmailOTP = async (firstName, otp) => {
         </div>
       <h3>Reset Password OTP</h3>
       <p>Dear ${firstName},</p>
-      <p>Your OTP for Nepal Mart App is <span style="font-weight:bold;">${otp}</span>.</p>
+      <p>Your OTP for Adventure Gear Nepal is <span style="font-weight:bold;">${otp}</span>.</p>
       <p>If you did not request to change your password, you can ignore this message.</p>
     </div>
     `,
