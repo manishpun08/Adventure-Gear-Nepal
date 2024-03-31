@@ -1,22 +1,33 @@
+import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
+  AppBar,
   Badge,
   Box,
   Button,
   Container,
+  CssBaseline,
+  Drawer,
   Grid,
   IconButton,
   Typography,
 } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { useQuery } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import $axios from "../lib/axios.instance";
 import CustomAvatar from "./CustomAvatar";
-import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 import SearchBar from "./SearchBar";
-import { useSelector } from "react-redux";
+import React from "react";
+
+const drawerWidth = 240;
 
 // add to cart
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -28,7 +39,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const Header = () => {
+const Header = (props) => {
   // user role from local storage.
   const userRole = localStorage.getItem("userRole");
 
@@ -46,6 +57,7 @@ const Header = () => {
   const itemCount = data?.data?.itemCount;
   // navigating
   const navigate = useNavigate();
+
   // navlinks
   const navItems = [
     {
@@ -75,6 +87,49 @@ const Header = () => {
     },
   ];
 
+  // drawer
+  const { window } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const drawer = (
+    <Box
+      onClick={handleDrawerToggle}
+      bgcolor="#131921"
+      sx={{ textAlign: "center" }}
+    >
+      <img
+        onClick={() => {
+          navigate("/home");
+        }}
+        style={{ width: "90px", cursor: "pointer" }}
+        className="logo"
+        src="/img/TreakLogo.png"
+        alt="logo"
+      />
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.id} disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "center", color: "#fff" }}
+              onClick={() => {
+                navigate(item.path);
+              }}
+            >
+              <ListItemText primary={item.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
   return (
     <>
       <Box className="header-upper" py={2}>
@@ -96,36 +151,72 @@ const Header = () => {
             {/* search bar  */}
             <Grid item xs={12} md={6}>
               <SearchBar />
-
               {/* menu bar starts */}
-              <Box textAlign="center" pt="0.8rem">
-                <Box
+              <Toolbar sx={{ color: "#fff" }}>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={handleDrawerToggle}
+                  sx={{ mr: 2, display: { sm: "none" } }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Box textAlign="center" pt="0.8rem">
+                  <Box
+                    sx={{
+                      display: { xs: "none", sm: "block" },
+                      "& button": {
+                        color: "#fff",
+                        transition: "color 0.3s", // Smooth transition effect
+                        "&:hover": {
+                          color: "#ffca28", // Change color on hover
+                        },
+                      },
+                    }}
+                  >
+                    {navItems.map((item) => (
+                      <Button
+                        key={item.id}
+                        onClick={() => {
+                          navigate(item.path);
+                        }}
+                      >
+                        {item.name}
+                      </Button>
+                    ))}
+
+                    {userRole === "seller" && (
+                      <Button onClick={() => navigate("/orders")}>
+                        Orders
+                      </Button>
+                    )}
+                  </Box>
+                </Box>
+              </Toolbar>
+
+              <nav>
+                <Drawer
+                  container={container}
+                  variant="temporary"
+                  open={mobileOpen}
+                  onClose={handleDrawerToggle}
+                  ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                  }}
                   sx={{
-                    display: { xs: "none", sm: "block" },
+                    display: { xs: "block", sm: "none" },
+                    "& .MuiDrawer-paper": {
+                      boxSizing: "border-box",
+                      width: drawerWidth,
+                    },
                   }}
                 >
-                  {navItems.map((item) => (
-                    <Button
-                      key={item.id}
-                      sx={{ color: "#fff" }}
-                      onClick={() => {
-                        navigate(item.path);
-                      }}
-                    >
-                      {item.name}
-                    </Button>
-                  ))}
-                  {userRole === "seller" && (
-                    <Button
-                      sx={{ color: "#fff" }}
-                      onClick={() => navigate("/orders")}
-                    >
-                      Orders
-                    </Button>
-                  )}
-                </Box>
-              </Box>
+                  {drawer}
+                </Drawer>
+              </nav>
             </Grid>
+
             {/* login and avatar */}
             <Grid item xs={12} md={3}>
               <Box
@@ -154,9 +245,6 @@ const Header = () => {
 
                 {/* Avatar of user  */}
                 <CustomAvatar />
-
-                {/* logout account  */}
-                <LogoutConfirmationDialog />
               </Box>
             </Grid>
           </Grid>

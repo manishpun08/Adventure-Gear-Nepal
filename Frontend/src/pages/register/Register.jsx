@@ -22,12 +22,17 @@ import dayjs from "dayjs";
 import { Formik } from "formik";
 import React from "react";
 import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { openSuccessSnackbar } from "../../store/slices/snackbarSlice";
 
 const Register = () => {
   // using navigate
   const navigate = useNavigate();
+
+  // using redux for snackbar
+  const dispatch = useDispatch();
 
   // Calculate min date
   const minDate = dayjs();
@@ -47,13 +52,13 @@ const Register = () => {
     },
     // on success
     onSuccess: (response) => {
-      console.log(response);
       navigate("/login");
+      dispatch(openSuccessSnackbar(response?.data?.message));
     },
 
     // on error
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      dispatch(openSuccessSnackbar(error?.response?.data?.message));
     },
   });
 

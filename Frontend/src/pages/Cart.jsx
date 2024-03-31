@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import React from "react";
 import { useQuery } from "react-query";
 import CartSummary from "../components/CartSummary";
@@ -39,19 +39,21 @@ const Cart = () => {
 
   return (
     <>
-      <Grid container gap="4rem">
-        <Grid item xs={12} lg={8}>
-          <CartTable cartItem={cartItem} />
-        </Grid>
+      <Container>
+        <Grid container gap="4rem">
+          <Grid item xs={12} lg={8}>
+            <CartTable cartItem={cartItem} />
+          </Grid>
 
-        <Grid item xs={12} lg={3} sx={{ marginTop: { lg: "2.8rem" } }}>
-          <CartSummary
-            orderSummary={orderSummary}
-            grandTotal={grandTotal}
-            productDataForOrdering={productDataForOrdering}
-          />
+          <Grid item xs={12} lg={3} sx={{ marginTop: { lg: "2.8rem" } }}>
+            <CartSummary
+              orderSummary={orderSummary}
+              grandTotal={grandTotal}
+              productDataForOrdering={productDataForOrdering}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </>
   );
 };

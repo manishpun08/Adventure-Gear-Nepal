@@ -11,16 +11,10 @@ const MainLayout = () => {
       <Header />
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          // textAlign: "center",
           margin: "2rem 0",
         }}
       >
-        <Container>
-          <Outlet />
-        </Container>
+        <Outlet />
         <CustomSnackbar />
       </Box>
       <Footer />

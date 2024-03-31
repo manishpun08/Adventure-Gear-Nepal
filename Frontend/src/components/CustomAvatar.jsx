@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -9,6 +10,8 @@ import {
 import Avatar from "@mui/material/Avatar";
 import * as React from "react";
 import { getFullName } from "../utils/general.function";
+import { useNavigate } from "react-router-dom";
+import LogoutConfirmationDialog from "./LogoutConfirmationDialog";
 
 function stringToColor(string) {
   let hash = 0;
@@ -39,10 +42,16 @@ function stringAvatar(name) {
   };
 }
 
-const settings = ["Profile", "Logout"];
+const settings = [
+  {
+    id: 1,
+    name: "Profile",
+    path: "/profile",
+  },
+];
 
 const CustomAvatar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -76,8 +85,21 @@ const CustomAvatar = () => {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
+          <MenuItem
+            sx={{ display: "flex", flexDirection: "column" }}
+            key={setting}
+            onClick={handleCloseUserMenu}
+          >
+            <Button
+              key={setting.id}
+              sx={{ color: "#000" }}
+              onClick={() => {
+                navigate(setting.path);
+              }}
+            >
+              {setting.name}
+            </Button>
+            <LogoutConfirmationDialog />
           </MenuItem>
         ))}
       </Menu>

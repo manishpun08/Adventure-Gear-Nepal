@@ -20,7 +20,10 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import $axios from "../../lib/axios.instance";
-import { openErrorSnackbar } from "../../store/slices/snackbarSlice";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../../store/slices/snackbarSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -42,6 +45,7 @@ const Login = () => {
       localStorage.setItem("firstName", response?.data?.user?.firstName);
       localStorage.setItem("lastName", response?.data?.user?.lastName);
       navigate("/home");
+      dispatch(openSuccessSnackbar(response?.data?.message));
     },
 
     // on error

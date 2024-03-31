@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 const currentDate = dayjs();
 
-export let recruitmentValidation = Yup.object({
+export let lobbyValidation = Yup.object({
   destination: Yup.string().required("Destination is required."),
   adventure: Yup.string()
     .required("Adventure type is required.")

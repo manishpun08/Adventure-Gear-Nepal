@@ -7,12 +7,14 @@ import About from "../pages/About";
 import AddProduct from "../pages/AddProduct";
 import Cart from "../pages/Cart";
 import Contact from "../pages/Contact";
+import FAQ from "../pages/FAQ";
 import Home from "../pages/Home";
 import Lobby from "../pages/Lobby";
 import Order from "../pages/Order";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import ProductDetails from "../pages/ProductDetails";
 import ProductList from "../pages/ProductList";
+import Profile from "../pages/Profile";
 
 const LoginRoute = [
   {
@@ -70,6 +72,14 @@ const LoginRoute = [
       {
         path: "orders",
         element: <Order />,
+      },
+      {
+        path: "faq",
+        element: <FAQ />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },

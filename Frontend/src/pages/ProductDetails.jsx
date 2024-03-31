@@ -2,7 +2,13 @@ import React from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { getProductDetails } from "../lib/apis";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
 import ProductImage from "../components/ProductImage";
 import ProductDescription from "../components/ProductDescription";
 import { fallbackImage } from "../constant/general.constant";
@@ -24,7 +30,7 @@ const ProductDetails = () => {
   }
   return (
     <>
-      <Box>
+      <Container>
         <Typography
           variant="h4"
           sx={{
@@ -54,7 +60,7 @@ const ProductDetails = () => {
             <ProductDescription {...productDetails} />
           </Grid>
         </Grid>
-      </Box>
+      </Container>
     </>
   );
 };

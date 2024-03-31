@@ -4,8 +4,12 @@ import React from "react";
 const Loader = () => {
   return (
     <div>
-      <Box sx={{ textAlign: "center", width: "1000px" }}>
-        <img src="/gif/loader.gif" alt="loader" />
+      <Box>
+        <img
+          style={{ display: "flex", margin: "0 auto" }}
+          src="/gif/loader.gif"
+          alt="loader"
+        />
       </Box>
     </div>
   );

@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Grid,
+  ListItem,
   Stack,
   TextField,
   Typography,
@@ -27,76 +28,38 @@ const Footer = () => {
               </Grid>
 
               <Grid item xs={12} md={3}>
-                <Typography
-                  sx={{ paddingBottom: "1rem", color: "white" }}
-                  variant="h6"
-                >
-                  Contact Us
-                </Typography>
-                <ul>
-                  <li>
-                    <Link>About Us</Link>
-                  </li>
-                  <li>
-                    <Link>FAQ</Link>
-                  </li>
-                  <li>
-                    <Link>Stories and Blogs</Link>
-                  </li>
-                  <li>
-                    <Link>Terms and Conditions</Link>
-                  </li>
-                </ul>
-              </Grid>
+                <ListItem>
+                  <Link to="contact">
+                    <Typography sx={{ color: "#fff" }} fontSize="18px">
+                      Contact Us
+                    </Typography>
+                  </Link>
+                </ListItem>
 
-              <Grid item xs={12} md={3}>
-                <Typography
-                  sx={{ paddingBottom: "1rem", color: "white" }}
-                  variant="h6"
-                >
-                  Contact Us
-                </Typography>
-                <ul>
-                  <li>
-                    <Link>About Us</Link>
-                  </li>
-                  <li>
-                    <Link>FAQ</Link>
-                  </li>
-                  <li>
-                    <Link>Stories and Blogs</Link>
-                  </li>
-                  <li>
-                    <Link>Terms and Conditions</Link>
-                  </li>
-                </ul>
-              </Grid>
+                <ListItem>
+                  <Link to="about">
+                    <Typography sx={{ color: "#fff" }}>About Us</Typography>
+                  </Link>
+                </ListItem>
 
-              <Grid item xs={12} md={3}>
-                <Typography
-                  sx={{ paddingBottom: "1rem", color: "white" }}
-                  variant="h6"
-                >
-                  Contact Us
-                </Typography>
-                <ul>
-                  <li>
-                    <Link>About Us</Link>
-                  </li>
-                  <li>
-                    <Link>FAQ</Link>
-                  </li>
-                  <li>
-                    <Link>Stories and Blogs</Link>
-                  </li>
-                  <li>
-                    <Link>Terms and Conditions</Link>
-                  </li>
-                </ul>
+                <ListItem>
+                  <Link to="faq">
+                    <Typography sx={{ color: "#fff" }}>FAQ</Typography>
+                  </Link>
+                </ListItem>
+
+                <ListItem>
+                  <Link>
+                    <Typography sx={{ color: "#fff" }}>
+                      Terms and Conditions
+                    </Typography>
+                  </Link>
+                </ListItem>
               </Grid>
             </Grid>
           </Container>
         </Box>
+
         <Box className="footer-bottom" sx={{ p: 2 }}>
           <Container maxWidth="lg">
             <Grid container>

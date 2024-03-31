@@ -12,7 +12,6 @@ const NoRecruit = () => {
       >
         Nobody is Recruiting.
       </Typography>
-      ;
     </div>
   );
 };

@@ -94,7 +94,7 @@ router.post(
       payload,
       "495de14aa86115fb4ef7c79e4b5838e9d88ae5a51a46758b8d5ba0fdc53dc272da60c8613341c48b619ac88e5896956b40d1bf93ddcf5b0185ba58fc87bd0c7e",
       {
-        expiresIn: "1d",
+        expiresIn: "1h",
       }
     );
 

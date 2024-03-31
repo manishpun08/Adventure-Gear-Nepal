@@ -1,6 +1,6 @@
+import bcrypt from "bcrypt";
 import express from "express";
 import User from "../user/user.model.js";
-import { generateOtp } from "../utils/generate.random.number.js";
 import { sendEmailOTP } from "./email.service.js";
 import {
   forgetPasswordValidationSchema,
@@ -8,7 +8,7 @@ import {
   verifyOtpValidation,
 } from "./forget.validation.js";
 import { OTP } from "./otp.model.js";
-import bcrypt from "bcrypt";
+import otpGenerator from "otp-generator";
 
 const router = express.Router();
 
@@ -45,8 +45,12 @@ router.post(
     }
 
     // generate and send otp
-    const otp = generateOtp();
-
+    const otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+      lowerCaseAlphabets: false,
+    });
+    console.log(otp);
     // send email
     await sendEmailOTP(user.firstName, otp);
 
