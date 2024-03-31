@@ -22,7 +22,7 @@ router.post(
       return res.status(400).send({ message: error.message });
     }
   },
-  // creating recruit table
+  // creating lobby table
   async (req, res) => {
     const values = req.body;
 
@@ -64,7 +64,9 @@ router.post("/lobby/add/user", isUser, async (req, res) => {
     const loggedInUserId = req.loggedInUserId;
 
     // Find the lobby document based on the provided ID (e.g., '66082fa425ba4c5a05e96fc9')
-    const lobby = await Lobby.findById({ _id });
+    const lobby = await Lobby.findById({
+      loggedInUserId,
+    });
 
     // Check if the lobby exists
     if (!lobby) {

@@ -62,8 +62,6 @@ const lobbySchema = new mongoose.Schema(
   }
 );
 
-// Create index to make documents expire
-
 // create table
 const Lobby = mongoose.model("Lobby", lobbySchema);
 

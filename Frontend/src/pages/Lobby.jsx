@@ -6,7 +6,7 @@ import LobbyBody from "../components/LobbyBody";
 const Lobby = () => {
   return (
     <>
-      <Container>
+      <Container sx={{ marginTop: "2rem" }}>
         <Typography
           variant="h4"
           fontWeight="700"

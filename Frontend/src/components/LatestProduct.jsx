@@ -73,7 +73,7 @@ const LatestProduct = (props) => {
   }
   return (
     <>
-      <Container>
+      <Container sx={{ marginTop: "3rem" }}>
         <Typography variant="h5" textAlign="center" fontWeight="800">
           LATEST PRODUCT
         </Typography>

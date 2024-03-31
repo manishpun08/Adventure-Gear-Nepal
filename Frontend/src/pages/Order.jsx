@@ -10,7 +10,7 @@ import { useQuery } from "react-query";
 import $axios from "../lib/axios.instance";
 import Loader from "../components/Loader";
 import { useDispatch } from "react-redux";
-import { Chip } from "@mui/material";
+import { Chip, Container } from "@mui/material";
 
 const tableHeader = [
   "S.N",
@@ -40,42 +40,48 @@ const Order = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            {tableHeader.map((item, index) => {
-              return (
-                <TableCell align="left" key={index} sx={{ fontWeight: "700" }}>
-                  {item}
-                </TableCell>
-              );
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {orderList.map((item, index) => (
-            <TableRow
-              key={item._id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {index + 1}
-              </TableCell>
-              <TableCell align="left">{item.productData.name}</TableCell>
-              <TableCell align="center">{item.orderQuantity}</TableCell>
-              <TableCell align="center">${item.unitPrice}</TableCell>
-              <TableCell align="center">{item.subTotal}</TableCell>
-              <TableCell align="left">{`${item.buyerData.firstName} ${item.buyerData.lastName}`}</TableCell>
-              <TableCell align="left">{item.buyerData.email}</TableCell>
-              <TableCell align="center">
-                <Chip label={item.paymentStatus} color="success" />
-              </TableCell>
+    <Container sx={{ marginTop: "2rem" }}>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              {tableHeader.map((item, index) => {
+                return (
+                  <TableCell
+                    align="left"
+                    key={index}
+                    sx={{ fontWeight: "700" }}
+                  >
+                    {item}
+                  </TableCell>
+                );
+              })}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {orderList.map((item, index) => (
+              <TableRow
+                key={item._id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
+                <TableCell align="left">{item.productData.name}</TableCell>
+                <TableCell align="center">{item.orderQuantity}</TableCell>
+                <TableCell align="center">${item.unitPrice}</TableCell>
+                <TableCell align="center">{item.subTotal}</TableCell>
+                <TableCell align="left">{`${item.buyerData.firstName} ${item.buyerData.lastName}`}</TableCell>
+                <TableCell align="left">{item.buyerData.email}</TableCell>
+                <TableCell align="center">
+                  <Chip label={item.paymentStatus} color="success" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 export default Order;

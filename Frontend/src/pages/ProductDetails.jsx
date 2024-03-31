@@ -30,7 +30,7 @@ const ProductDetails = () => {
   }
   return (
     <>
-      <Container>
+      <Container sx={{ marginTop: "2rem" }}>
         <Typography
           variant="h4"
           sx={{

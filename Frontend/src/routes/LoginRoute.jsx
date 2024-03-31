@@ -15,6 +15,7 @@ import PaymentSuccess from "../pages/PaymentSuccess";
 import ProductDetails from "../pages/ProductDetails";
 import ProductList from "../pages/ProductList";
 import Profile from "../pages/Profile";
+import Terms from "../pages/Terms";
 
 const LoginRoute = [
   {
@@ -80,6 +81,10 @@ const LoginRoute = [
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "terms",
+        element: <Terms />,
       },
     ],
   },

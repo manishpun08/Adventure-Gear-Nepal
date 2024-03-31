@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useQueries, useQuery } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -30,20 +30,22 @@ const PaymentSuccess = () => {
     },
   });
   return (
-    <Stack spacing={2} alignItems="center">
-      <Typography variant="h3">Payment is successful.</Typography>
-      <Typography variant="h3">Thanks for shopping with us.</Typography>
-      <Button
-        sx={{ width: "10rem" }}
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          navigate("/product");
-        }}
-      >
-        Keep Shopping.
-      </Button>
-    </Stack>
+    <Container sx={{ marginTop: "2rem" }}>
+      <Stack spacing={2} alignItems="center">
+        <Typography variant="h3">Payment is successful.</Typography>
+        <Typography variant="h3">Thanks for shopping with us.</Typography>
+        <Button
+          sx={{ width: "10rem" }}
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            navigate("/product");
+          }}
+        >
+          Keep Shopping.
+        </Button>
+      </Stack>
+    </Container>
   );
 };
 

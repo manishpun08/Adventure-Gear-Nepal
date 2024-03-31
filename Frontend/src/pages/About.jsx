@@ -4,7 +4,7 @@ import React from "react";
 const About = () => {
   return (
     <div>
-      <Container>
+      <Container sx={{ marginTop: "2rem" }}>
         <Grid container justifyContent="space-between">
           <Grid item md={5.9} xs={12}>
             <img

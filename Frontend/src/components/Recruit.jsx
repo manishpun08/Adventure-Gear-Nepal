@@ -48,7 +48,7 @@ const Recruit = () => {
   const { mutate } = useMutation({
     mutationKey: ["add-recruitment"],
     mutationFn: async (values) => {
-      return await $axios.post("/recruit/add", values);
+      return await $axios.post("/lobby/create", values);
     },
     onSuccess: (res) => {
       navigate("/lobby");
@@ -63,7 +63,7 @@ const Recruit = () => {
   }
 
   return (
-    <div>
+    <>
       <Box
         sx={{
           display: "flex",
@@ -160,6 +160,7 @@ const Recruit = () => {
               <Typography variant="h5" textAlign="center">
                 Add Recruitment
               </Typography>
+
               {destinationImage && (
                 <Stack sx={{ height: "300px" }}>
                   <img src={localUrl} style={{ height: "100%" }} />
@@ -184,6 +185,7 @@ const Recruit = () => {
                   />
                 </Button>
               </FormControl>
+
               <Stack direction="row" spacing={2}>
                 <FormControl sx={{ width: "210px" }}>
                   <InputLabel required>Adventure</InputLabel>
@@ -300,7 +302,7 @@ const Recruit = () => {
           )}
         </Formik>
       </Box>
-    </div>
+    </>
   );
 };
 

@@ -11,7 +11,7 @@ const MainLayout = () => {
       <Header />
       <Box
         sx={{
-          margin: "2rem 0",
+          marginBottom: "2rem",
         }}
       >
         <Outlet />

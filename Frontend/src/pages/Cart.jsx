@@ -39,7 +39,7 @@ const Cart = () => {
 
   return (
     <>
-      <Container>
+      <Container sx={{ marginTop: "2rem" }}>
         <Grid container gap="4rem">
           <Grid item xs={12} lg={8}>
             <CartTable cartItem={cartItem} />

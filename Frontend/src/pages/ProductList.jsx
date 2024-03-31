@@ -8,7 +8,7 @@ const ProductList = () => {
 
   return (
     <>
-      <Container>
+      <Container sx={{ marginTop: "2rem" }}>
         <Box
           sx={{
             display: "flex",

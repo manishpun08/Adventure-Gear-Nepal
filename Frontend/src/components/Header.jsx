@@ -152,7 +152,12 @@ const Header = (props) => {
             <Grid item xs={12} md={6}>
               <SearchBar />
               {/* menu bar starts */}
-              <Toolbar sx={{ color: "#fff" }}>
+              <Toolbar
+                sx={{
+                  color: "#fff",
+                  justifyContent: "center",
+                }}
+              >
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -223,9 +228,11 @@ const Header = (props) => {
                 sx={{
                   display: "flex",
                   gap: "1rem",
-                  p: 1,
                   alignItems: "center",
-                  justifyContent: "flex-end",
+                  justifyContent: {
+                    xs: "center", // Center for extra-small screens
+                    md: "flex-end", // Align end for medium screens and above
+                  },
                 }}
               >
                 {/* cart  */}

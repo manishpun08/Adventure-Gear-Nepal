@@ -49,7 +49,7 @@ const Footer = () => {
                 </ListItem>
 
                 <ListItem>
-                  <Link>
+                  <Link to="terms">
                     <Typography sx={{ color: "#fff" }}>
                       Terms and Conditions
                     </Typography>
