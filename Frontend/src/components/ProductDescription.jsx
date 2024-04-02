@@ -25,6 +25,8 @@ import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from "../store/slices/snackbarSlice";
+import ProductAddReviewDialog from "./ProductAddReviewDialog";
+import Rating from "@mui/material/Rating";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -111,6 +113,9 @@ const ProductDescription = (props) => {
     },
   });
 
+  const [showAddReviewDialog, setShowAddReviewDialog] = React.useState(false);
+
+  const currentUserId = localStorage.getItem("userId");
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -121,6 +126,7 @@ const ProductDescription = (props) => {
         >
           <Tab label="Description" {...a11yProps(0)} />
           <Tab label="Return or Exchange" {...a11yProps(1)} />
+          <Tab label="Reviews" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -130,6 +136,70 @@ const ProductDescription = (props) => {
       <CustomTabPanel value={value} index={1}>
         No returns only exchange within 7 days of purchase. Packaging should be
         intact.
+      </CustomTabPanel>
+
+      <CustomTabPanel value={value} index={2}>
+        {props.ratings.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              gap: 5,
+              alignItems: "center",
+              marginBottom: 8,
+            }}
+          >
+            <p style={{ fontWeight: 800, fontSize: 32 }}>
+              {(
+                props.ratings.reduce((acc, cur) => acc + cur.value, 0) /
+                props.ratings.length
+              ).toFixed(1)}
+            </p>
+            <div
+              style={{ display: "flex", flexDirection: "column", fontSize: 12 }}
+            >
+              <p>Out of</p>
+              <p style={{ marginTop: -4 }}>5 Stars</p>
+            </div>
+            <Rating
+              value={
+                props.ratings.reduce((acc, cur) => acc + cur.value, 0) /
+                props.ratings.length
+              }
+              precision={0.5}
+              size="large"
+              readOnly
+              sx={{ marginLeft: 1 }}
+            />
+          </div>
+        )}
+        {props.sellerId == currentUserId ||
+        props.ratings?.findIndex((r) => r.user._id == currentUserId) >
+          -1 ? null : (
+          <Button
+            startIcon={<AddIcon />}
+            sx={{ marginBottom: 2 }}
+            onClick={() => setShowAddReviewDialog(true)}
+          >
+            Add your review
+          </Button>
+        )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          {props.ratings?.length > 0 ? (
+            props.ratings.map((r) => (
+              <div key={r._id}>
+                <Rating value={r.value} precision={0.5} readOnly />
+                <p style={{ fontWeight: 600 }}>
+                  {r.user.firstName} {r.user.lastName} -{" "}
+                  {new Date(r.createdAt).toDateString()}
+                </p>
+                <p>{r.title}</p>
+                <p>{r.body}</p>
+              </div>
+            ))
+          ) : (
+            <Typography textAlign="justify">No reviews yet</Typography>
+          )}
+        </div>
       </CustomTabPanel>
 
       <Box>
@@ -191,6 +261,12 @@ const ProductDescription = (props) => {
           </>
         )}
       </Box>
+
+      <ProductAddReviewDialog
+        productId={params?.id}
+        show={showAddReviewDialog}
+        closeHandler={() => setShowAddReviewDialog(false)}
+      />
     </>
   );
 };

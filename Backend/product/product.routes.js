@@ -47,7 +47,9 @@ router.get(
     // extract product id from req.params
     const productId = req.params.id;
     // find product
-    const product = await Product.findOne({ _id: productId });
+    const product = await Product.findOne({ _id: productId }).populate({
+      path: "ratings.user",
+    });
     // if not product throw error
     if (!product) {
       return res.status(404).send({ message: "Product does not exits." });
@@ -56,6 +58,39 @@ router.get(
     return res
       .status(200)
       .send({ message: "success", productDetails: product });
+  }
+);
+
+// add product review
+router.post(
+  "/product/review/:id",
+
+  // authenticating user
+  isUser,
+
+  // validating mongo id
+  checkMongoIdFromParams,
+
+  // getting product details function
+  async (req, res) => {
+    // extract product id from req.params
+    const productId = req.params.id;
+    // add review to the product reviews array
+    await Product.findOneAndUpdate(
+      { _id: productId },
+      {
+        $push: {
+          ratings: {
+            user: req.loggedInUserId,
+            value: req.body.value,
+            title: req.body.title,
+            body: req.body.body,
+          },
+        },
+      }
+    );
+    // send success response
+    return res.status(201).send();
   }
 );
 

@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 
 // set rule
+const ratingSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    value: { type: Number, required: true },
+    title: { type: String, required: true },
+    body: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  }
+);
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -64,6 +75,7 @@ const productSchema = new mongoose.Schema(
       default: null,
       trim: true,
     },
+    ratings: [ratingSchema],
   },
   {
     timestamps: true,
