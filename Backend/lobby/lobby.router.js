@@ -55,7 +55,6 @@ router.get("/recruit/get/list", async (req, res) => {
       },
     },
   ]);
-  console.log(recruitList);
   return res.status(200).send({
     message: "Lobby list is displayed successfully.",
     recruitList,
