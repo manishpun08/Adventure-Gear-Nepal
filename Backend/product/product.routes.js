@@ -9,6 +9,7 @@ import { productReqBodyValidation } from "../middleware/reqBody.Product.middlewa
 import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 import { paginationValidationSchema } from "../middleware/pagination.validation.middleware.js";
 import Cart from "../cart/cart.model.js";
+import Order from "../order/order.model.js";
 
 const router = express.Router();
 
@@ -58,6 +59,41 @@ router.get(
     return res
       .status(200)
       .send({ message: "success", productDetails: product });
+  }
+);
+
+// get if the current user has purchased the given product
+router.get(
+  "/product/has-purchased/:id",
+
+  // authenticating user
+  isUser,
+
+  // validating mongo id
+  checkMongoIdFromParams,
+
+  // getting product details function
+  async (req, res) => {
+    // extract product id from req.params
+    const productId = req.params.id;
+    // find product
+    const product = await Product.findOne({ _id: productId }).populate({
+      path: "ratings.user",
+    });
+    // if not product throw error
+    if (!product) {
+      return res.status(404).send({ message: "Product does not exits." });
+    }
+    const hasUserPurchasedProduct = await Order.exists({
+      buyerId: req.loggedInUserId,
+      productId: productId,
+      paymentStatus: "Completed",
+    });
+    // send product as response
+    return res.status(200).send({
+      message: "success",
+      hasUserPurchasedProduct: !!hasUserPurchasedProduct,
+    });
   }
 );
 

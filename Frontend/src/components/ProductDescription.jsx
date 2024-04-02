@@ -18,7 +18,7 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate, useParams } from "react-router-dom";
 import DeleteProductDialog from "./DeleteProductDialog";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
 import { useDispatch } from "react-redux";
 import {
@@ -113,6 +113,15 @@ const ProductDescription = (props) => {
     },
   });
 
+  const { data: hasUserPurchasedProduct } = useQuery({
+    queryKey: ["has-purchased", params?.id],
+    queryFn: async () => {
+      return await $axios
+        .get(`/product/has-purchased/${params?.id}`)
+        .then((res) => res.data.hasUserPurchasedProduct);
+    },
+  });
+
   const [showAddReviewDialog, setShowAddReviewDialog] = React.useState(false);
 
   const currentUserId = localStorage.getItem("userId");
@@ -173,8 +182,8 @@ const ProductDescription = (props) => {
           </div>
         )}
         {props.sellerId == currentUserId ||
-        props.ratings?.findIndex((r) => r.user._id == currentUserId) >
-          -1 ? null : (
+        props.ratings?.findIndex((r) => r.user._id == currentUserId) > -1 ||
+        !hasUserPurchasedProduct ? null : (
           <Button
             startIcon={<AddIcon />}
             sx={{ marginBottom: 2 }}

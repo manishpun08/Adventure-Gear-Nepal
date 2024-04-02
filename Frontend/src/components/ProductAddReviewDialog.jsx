@@ -22,7 +22,9 @@ const ProductAddReviewDialog = ({ productId, show, closeHandler }) => {
     },
     onSuccess: () => {
       closeHandler();
-      queryClient.invalidateQueries({ queryKey: ["get-product-details"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-product-details", "has-purchased"],
+      });
     },
     onError: (error) => {
       console.log(error?.response?.data?.message);
