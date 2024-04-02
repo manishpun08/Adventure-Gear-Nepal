@@ -1,15 +1,8 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
   FormControl,
   FormHelperText,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  LinearProgress,
-  OutlinedInput,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,12 +10,38 @@ import { Formik } from "formik";
 import React from "react";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../../store/slices/snackbarSlice";
 import $axios from "../../lib/axios.instance";
-import { openErrorSnackbar } from "../../store/slices/snackbarSlice";
+import Loader from "../../components/Loader";
 
 const ForgetPassword = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isLoading, mutate } = useMutation({
+    mutationKey: ["send-otp-code"],
+    mutationFn: async (values) => {
+      localStorage.setItem("email", values.email);
+      return await $axios.post("/otp/send", values);
+    },
+    onSuccess: (res) => {
+      dispatch(openSuccessSnackbar(res?.data?.message));
+      navigate("/otp-verify");
+    },
+    onError: (error) => {
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
+      console.log(error?.response);
+    },
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <>
       <Box
@@ -36,68 +55,47 @@ const ForgetPassword = () => {
         }}
       >
         <Formik
-          initialValues={{
-            email: "",
-          }}
+          initialValues={{ email: "" }}
           validationSchema={Yup.object({
             email: Yup.string()
-              .trim()
-              .email("Must be valid email.")
-              .required("Email is required.")
-              .lowercase(),
+              .email("Must be a valid email.")
+              .required("Email is required."),
           })}
           onSubmit={(values) => {
-            console.log(values);
+            mutate(values);
           }}
         >
-          {(formik) => (
+          {({ handleSubmit, getFieldProps, touched, errors }) => (
             <form
-              onSubmit={formik.handleSubmit}
+              onSubmit={handleSubmit}
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
                 padding: "2rem",
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-                width: "400px",
+                width: "350px",
                 borderRadius: "10px",
               }}
             >
-              <Typography
-                variant="h5"
-                fontWeight={800}
-                sx={{ color: "#232f3e" }}
-                textAlign="center"
-              >
-                Forget Password?
+              <Typography variant="h5" fontWeight="600" textAlign="center">
+                Forgot password?
               </Typography>
-              <Typography
-                variant="body2"
-                textAlign="center"
-              >{`Enter your email below and we'll send you password reset OTP `}</Typography>
+
+              <Typography textAlign="center" variant="body2">
+                {` Enter your email address below and we'll send you password reset
+                OTP.`}
+              </Typography>
               <FormControl>
-                <TextField
-                  label="Email Address"
-                  {...formik.getFieldProps("email")}
-                ></TextField>
-                {formik.touched.email && formik.errors.email ? (
-                  <FormHelperText error>{formik.errors.email}</FormHelperText>
+                <TextField label="Email Address" {...getFieldProps("email")} />
+                {touched.email && errors.email ? (
+                  <FormHelperText error>{errors.email}</FormHelperText>
                 ) : null}
               </FormControl>
 
-              <Button type="submit" variant="contained" color="info">
-                Send Email
+              <Button color="secondary" variant="contained" type="submit">
+                send email
               </Button>
-              <Link to="/login">
-                <Typography
-                  variant="subtitle2"
-                  borderTop="1px solid #ddd"
-                  textAlign="center"
-                  lineHeight={4}
-                >
-                  Already have an account?
-                </Typography>
-              </Link>
             </form>
           )}
         </Formik>

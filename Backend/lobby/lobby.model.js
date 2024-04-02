@@ -23,8 +23,7 @@ const lobbySchema = new mongoose.Schema(
 
     date: {
       type: Date,
-      required: false,
-      default: null,
+      required: true,
     },
 
     requirement: {
@@ -55,6 +54,15 @@ const lobbySchema = new mongoose.Schema(
     group: {
       type: [mongoose.Schema.Types.ObjectId], // Array of ObjectIds representing users
       default: [], // Default value is an empty array
+    },
+    lobbyExpireAt: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
     },
   },
   {

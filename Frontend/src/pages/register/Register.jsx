@@ -26,6 +26,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { openSuccessSnackbar } from "../../store/slices/snackbarSlice";
+import $axios from "../../lib/axios.instance";
 
 const Register = () => {
   // using navigate
@@ -48,7 +49,7 @@ const Register = () => {
   const { isLoading, isError, error, mutate } = useMutation({
     mutationKey: ["register-user"],
     mutationFn: async (values) => {
-      return await axios.post("http://localhost:8000/user/register", values);
+      return await $axios.post("/user/register", values);
     },
     // on success
     onSuccess: (response) => {

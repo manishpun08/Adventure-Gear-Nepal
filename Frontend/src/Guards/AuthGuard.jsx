@@ -8,7 +8,7 @@ const AuthGuard = (props) => {
   const { pathname } = useLocation();
   useEffect(() => {
     if (!isLoggedInUser) {
-      navigate("/login");
+      navigate("/home");
     }
     if (pathname === "/" && isLoggedInUser) {
       navigate("/login", { replace: true });

@@ -43,7 +43,12 @@ const LobbyFooter = () => {
       <Grid item md={4} mt={2}>
         <Stack direction="row" spacing={4}>
           <Box textAlign="center">
-            <IconButton color="primary">
+            <IconButton
+              onClick={() => {
+                location.reload();
+              }}
+              color="primary"
+            >
               <RefreshIcon />
               <Typography>Refresh</Typography>
             </IconButton>

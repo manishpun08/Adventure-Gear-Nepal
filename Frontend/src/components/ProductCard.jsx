@@ -51,6 +51,7 @@ const ProductCard = (props) => {
             variant="body2"
             color="text.secondary"
             textAlign={"justify"}
+            sx={{ minHeight: "100px" }}
           >
             {props.description.trim()}....
           </Typography>

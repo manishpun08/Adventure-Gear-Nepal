@@ -289,7 +289,7 @@ router.post(
 );
 
 // get latest product
-router.get("/product/list/latest", isUser, async (req, res) => {
+router.get("/product/list/latest", async (req, res) => {
   const products = await Product.aggregate([
     {
       $match: {},
@@ -310,7 +310,5 @@ router.get("/product/list/latest", isUser, async (req, res) => {
 
   return res.status(200).send({ message: "success", latestProducts: products });
 });
-
-
 
 export default router;

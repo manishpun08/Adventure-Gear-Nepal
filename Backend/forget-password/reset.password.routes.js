@@ -181,4 +181,5 @@ router.put(
       .send({ message: "Password is updated successfully." });
   }
 );
+
 export default router;

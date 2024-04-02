@@ -12,7 +12,7 @@ export let lobbyValidation = Yup.object({
   teamCount: Yup.number()
     .required("Team Count is required.")
     .min(1, "Teammate count must be at least 1."),
-  date: Yup.date().min(currentDate, "Date cannot be past dates."),
+  date: Yup.date().min(currentDate, "Date cannot be past dates.").required(),
   requirement: Yup.string().required("Requirement is required.").trim(),
 
   contactNumber: Yup.string()

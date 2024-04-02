@@ -9,7 +9,11 @@ import paymentRoutes from "./payment/paymentRoutes.js";
 import orderRoutes from "./order/order.routes.js";
 import lobbyRoutes from "./lobby/lobby.router.js";
 import resetPasswordRoutes from "./forget-password/reset.password.routes.js";
-
+import cron from "node-cron";
+import { deleteLobby } from "./lobby/lobby.cron.js";
+cron.schedule("7 0 * * *", () => {
+  deleteLobby();
+});
 // my app
 const app = express();
 

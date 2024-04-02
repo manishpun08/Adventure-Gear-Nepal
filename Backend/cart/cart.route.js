@@ -161,6 +161,7 @@ router.get("/cart/item/count", isBuyer, async (req, res) => {
   return res.status(200).send({ message: "success", itemCount: cartCount });
 });
 
+
 // TODO:update cart quantity.
 router.put(
   "/cart/quantity/update/:id",

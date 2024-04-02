@@ -1,13 +1,14 @@
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
 import { useQuery } from "react-query";
+import { userProfileBackup } from "../constant/general.constant";
 import $axios from "../lib/axios.instance";
-import { useNavigate } from "react-router-dom";
+import { getFullName } from "../utils/general.function";
 import LobbyDetail from "./LobbyDetail";
 import NoRecruit from "./NoRecruit";
-import CustomAvatar from "./CustomAvatar";
-import { getFullName } from "../utils/general.function";
-import { fallbackImage, userProfileBackup } from "../constant/general.constant";
+import Loader from "./Loader";
 
 function stringToColor(string) {
   let hash = 0;
@@ -43,6 +44,8 @@ function stringAvatar(name) {
 const fullName = getFullName();
 
 const LobbyBody = () => {
+  dayjs.extend(relativeTime);
+
   const { isLoading, isError, error, data } = useQuery({
     queryKey: ["get-recruit-list"],
     queryFn: async () => {
@@ -55,7 +58,9 @@ const LobbyBody = () => {
   if (recruitList && recruitList.length < 1) {
     return <NoRecruit />;
   }
-
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <>
       <Stack>
@@ -77,7 +82,7 @@ const LobbyBody = () => {
                   </span>
                 </Typography>
                 <Typography variant="h5" fontWeight="600" paddingRight={25}>
-                  Expires in: 6 Day
+                  Expires {dayjs(item?.lobbyExpireAt).fromNow()}
                 </Typography>
               </Stack>
 

@@ -3,6 +3,7 @@ import { isUser } from "../middleware/authentication.middleware.js";
 import User from "../user/user.model.js";
 import Lobby from "./lobby.model.js";
 import { lobbyValidation } from "./lobby.validation.js";
+import dayjs from "dayjs";
 
 const router = express.Router();
 
@@ -24,7 +25,8 @@ router.post(
   },
   // creating lobby table
   async (req, res) => {
-    const values = req.body;
+    let values = req.body;
+    values.lobbyExpireAt = dayjs(values.date).startOf("day").add(1, "d");
 
     await Lobby.create(values);
 
@@ -49,9 +51,11 @@ router.get("/recruit/get/list", async (req, res) => {
         contactNumber: 1,
         description: 1,
         image: 1,
+        lobbyExpireAt: 1,
       },
     },
   ]);
+  console.log(recruitList);
   return res.status(200).send({
     message: "Lobby list is displayed successfully.",
     recruitList,
@@ -62,11 +66,10 @@ router.get("/recruit/get/list", async (req, res) => {
 router.post("/lobby/add/user", isUser, async (req, res) => {
   try {
     const loggedInUserId = req.loggedInUserId;
+    const lobbyId = req.body;
 
-    // Find the lobby document based on the provided ID (e.g., '66082fa425ba4c5a05e96fc9')
-    const lobby = await Lobby.findById({
-      loggedInUserId,
-    });
+    // Find the lobby document based on the provided ID
+    const lobby = await Lobby.findById("660a755dbe5b802f102faeb9");
 
     // Check if the lobby exists
     if (!lobby) {
@@ -101,7 +104,9 @@ router.post("/lobby/add/user", isUser, async (req, res) => {
 router.get("/lobby/user/list", isUser, async (req, res) => {
   const userGroup = await Lobby.aggregate([
     {
-      $match: {},
+      $match: {
+        userId: req.loggedInUserId,
+      },
     },
     {
       $lookup: {
@@ -113,6 +118,7 @@ router.get("/lobby/user/list", isUser, async (req, res) => {
     },
     {
       $project: {
+        destination: 1,
         userData: {
           firstName: { $first: "$userDetail.firstName" },
           lastName: { $first: "$userDetail.lastName" },
@@ -121,12 +127,10 @@ router.get("/lobby/user/list", isUser, async (req, res) => {
       },
     },
   ]);
-  // userGroup.map((item, index) => {
-  //   const jpt = item.userData.firstName;
-  //   console.log(jpt);
-  // });
-  // console.log(userGroup);
+
+  console.log(userGroup);
   return res.status(200).send({ message: "success", userGroup: userGroup });
 });
 
+// todo pull:: to remove userId from array.
 export default router;

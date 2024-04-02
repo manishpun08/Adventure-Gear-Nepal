@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmailOTP = async (firstName, otp) => {
+export const sendEmailOTP = async (firstName, otp, email) => {
   try {
     const info = await transporter.sendMail({
       from: '"Adventure Gear Nepal" <adventuregearnepal@gmail.com>', // sender address
