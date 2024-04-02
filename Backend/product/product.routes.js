@@ -4,12 +4,14 @@ import {
   isBuyer,
   isSeller,
   isUser,
+  isAdmin,
 } from "../middleware/authentication.middleware.js";
 import { productReqBodyValidation } from "../middleware/reqBody.Product.middleware.js";
 import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 import { paginationValidationSchema } from "../middleware/pagination.validation.middleware.js";
 import Cart from "../cart/cart.model.js";
 import Order from "../order/order.model.js";
+import Category from "./product-category.model.js";
 
 const router = express.Router();
 
@@ -380,6 +382,27 @@ router.get("/product/list/latest", async (req, res) => {
   ]);
 
   return res.status(200).send({ message: "success", latestProducts: products });
+});
+
+// get possible categories
+router.get("/product/categories", async (req, res) => {
+  const categories = await Category.find({});
+  return res.status(200).send({ message: "success", categories });
+});
+
+// add new categories
+router.post("/product/categories", async (req, res) => {
+  const category = new Category({
+    title: req.body.title,
+  });
+  await category.save();
+  return res.status(201).send({ message: "success", category });
+});
+
+// delete categories
+router.delete("/product/categories/:id", async (req, res) => {
+  await Category.findByIdAndDelete(req.params.id);
+  return res.status(200).send({ message: "success" });
 });
 
 export default router;

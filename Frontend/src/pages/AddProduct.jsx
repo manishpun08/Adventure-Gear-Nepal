@@ -17,17 +17,17 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import Loader from "../components/Loader";
-import { productCategories } from "../constant/general.constant";
 import { addProduct } from "../lib/apis";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from "../store/slices/snackbarSlice";
+import $axios from "../lib/axios.instance";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -70,7 +70,16 @@ const AddProduct = () => {
     },
   });
 
-  if (isLoading || imageLoading) {
+  const { data: categoriesData, isLoading: categoriesDataLoading } = useQuery({
+    queryKey: ["categories-list"],
+    queryFn: async () => {
+      return await $axios("/product/categories").then(
+        (res) => res.data.categories
+      );
+    },
+  });
+
+  if (isLoading || imageLoading || categoriesDataLoading) {
     return <Loader />;
   }
 
@@ -113,7 +122,7 @@ const AddProduct = () => {
             category: Yup.string()
               .required("Select a category")
               .trim()
-              .oneOf(productCategories),
+              .oneOf(categoriesData?.map((c) => c.title)),
             freeShipping: Yup.boolean().default(false),
             description: Yup.string()
               .required("Description is required.")
@@ -244,9 +253,9 @@ const AddProduct = () => {
                     label="Category"
                     {...formik.getFieldProps("category")}
                   >
-                    {productCategories.map((item, index) => (
-                      <MenuItem key={index} value={item}>
-                        {item}
+                    {categoriesData?.map((item, index) => (
+                      <MenuItem key={index} value={item.title}>
+                        {item.title}
                       </MenuItem>
                     ))}
                   </Select>

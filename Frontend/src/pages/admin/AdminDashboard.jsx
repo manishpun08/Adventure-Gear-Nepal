@@ -113,6 +113,15 @@ const AdminDashboard = () => {
   });
   const dashboardData = data?.data?.dashboard;
 
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories-list"],
+    queryFn: async () => {
+      return await $axios("/product/categories").then(
+        (res) => res.data.categories
+      );
+    },
+  });
+
   if (isLoading) {
     return <LoadingIndicator />;
   }
@@ -160,7 +169,7 @@ const AdminDashboard = () => {
           />
           <StatEntry
             title="Total Categories"
-            value={dashboardData.latest4Products.length}
+            value={categoriesData.length}
             icon={<CategoryIcon htmlColor="white" fontSize="large" />}
             divStyle={{
               backgroundColor: "#ffb72c",

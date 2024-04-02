@@ -29,7 +29,7 @@ function Header() {
         filter: "drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.1))",
         position: "sticky",
         top: 0,
-        zIndex: 9999999,
+        zIndex: 999,
       }}
     >
       <p style={{ fontSize: 20 }}>Adventure Gear Nepal Dashboard</p>
