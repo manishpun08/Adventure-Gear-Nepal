@@ -121,9 +121,6 @@ router.get("/recruit/get/list", async (req, res) => {
       },
     },
     {
-      $unwind: "$group",
-    },
-    {
       $project: {
         destination: 1,
         adventure: 1,

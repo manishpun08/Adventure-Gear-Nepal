@@ -66,8 +66,8 @@ const LobbyBody = () => {
     mutate,
   } = useMutation({
     mutationKey: ["add-user-to-lobby"],
-    mutationFn: async (id) => {
-      return await $axios.post(`/lobby/addUser/${id}`);
+    mutationFn: async (_id) => {
+      return await $axios.post(`/lobby/addUser/${_id}`);
     },
   });
 
@@ -123,62 +123,7 @@ const LobbyBody = () => {
                 >
                   <Avatar {...stringAvatar(fullName)} />
                 </Box>
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={userProfileBackup}
-                    alt=""
-                  />
-                </Box>
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={userProfileBackup}
-                    alt=""
-                  />
-                </Box>
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={userProfileBackup}
-                    alt=""
-                  />
-                </Box>
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={userProfileBackup}
-                    alt=""
-                  />
-                </Box>
+
                 <Box
                   height={160}
                   width={160}
@@ -195,11 +140,12 @@ const LobbyBody = () => {
                 </Box>
 
                 <LobbyDetail {...item} />
+
                 <Button
                   variant="contained"
                   color="warning"
                   onClick={() => {
-                    mutate();
+                    mutate(item._id);
                   }}
                 >
                   Join
