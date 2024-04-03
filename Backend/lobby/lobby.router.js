@@ -36,39 +36,15 @@ router.post(
   }
 );
 
-// getting lobby list
-router.get("/recruit/get/list", async (req, res) => {
-  const recruitList = await Lobby.aggregate([
-    { $match: {} },
-
-    {
-      $project: {
-        destination: 1,
-        adventure: 1,
-        teamCount: 1,
-        date: 1,
-        requirement: 1,
-        contactNumber: 1,
-        description: 1,
-        image: 1,
-        lobbyExpireAt: 1,
-      },
-    },
-  ]);
-  return res.status(200).send({
-    message: "Lobby list is displayed successfully.",
-    recruitList,
-  });
-});
-
-// Add member to lobby
-router.post("/lobby/add/user", isUser, async (req, res) => {
+// Add member to lobby by id
+router.post("/lobby/addUser/:id", isUser, async (req, res) => {
   try {
+    const lobbyId = req.params.id;
+
     const loggedInUserId = req.loggedInUserId;
-    const lobbyId = req.body;
 
     // Find the lobby document based on the provided ID
-    const lobby = await Lobby.findById("660a755dbe5b802f102faeb9");
+    const lobby = await Lobby.findById({ _id: lobbyId });
 
     // Check if the lobby exists
     if (!lobby) {
@@ -88,6 +64,7 @@ router.post("/lobby/add/user", isUser, async (req, res) => {
     // Save the updated lobby document
     const updatedLobby = await lobby.save();
 
+    console.log(updatedLobby);
     console.log("User added to lobby successfully.");
     return res.status(200).send({
       message: "User is added to the lobby successfully.",
@@ -99,25 +76,64 @@ router.post("/lobby/add/user", isUser, async (req, res) => {
   }
 });
 
-// get group detail
-router.get("/lobby/user/list", isUser, async (req, res) => {
-  const userGroup = await Lobby.aggregate([
-    {
-      $match: {
-        userId: req.loggedInUserId,
-      },
-    },
+// Remove member from lobby by id
+router.post("/lobby/removeUser/:id", isUser, async (req, res) => {
+  try {
+    const lobbyId = req.params.id;
+
+    const loggedInUserId = req.loggedInUserId;
+
+    // Find the lobby document based on the provided ID
+    const lobby = await Lobby.findById({ _id: lobbyId });
+
+    // Check if the lobby exists
+    if (!lobby) {
+      return res.status(404).send({ message: "Lobby not found." });
+    }
+
+    // Add the user's ID to the lobby's group array
+    lobby.group.pull(loggedInUserId);
+
+    // Save the updated lobby document
+    const updatedLobby = await lobby.save();
+
+    console.log("User removed from lobby successfully.");
+    return res.status(200).send({
+      message: "User is removed from the lobby successfully.",
+      updatedLobby,
+    });
+  } catch (error) {
+    console.error("Error removing user from lobby:", error);
+    return res.status(500).send({ message: "Internal server error." });
+  }
+});
+
+// getting lobby list
+router.get("/recruit/get/list", async (req, res) => {
+  const recruitList = await Lobby.aggregate([
+    { $match: {} },
     {
       $lookup: {
         from: "users",
-        localField: "userId",
+        localField: "group",
         foreignField: "_id",
         as: "userDetail",
       },
     },
     {
+      $unwind: "$group",
+    },
+    {
       $project: {
         destination: 1,
+        adventure: 1,
+        teamCount: 1,
+        date: 1,
+        requirement: 1,
+        contactNumber: 1,
+        description: 1,
+        image: 1,
+        lobbyExpireAt: 1,
         userData: {
           firstName: { $first: "$userDetail.firstName" },
           lastName: { $first: "$userDetail.lastName" },
@@ -127,9 +143,11 @@ router.get("/lobby/user/list", isUser, async (req, res) => {
     },
   ]);
 
-  console.log(userGroup);
-  return res.status(200).send({ message: "success", userGroup: userGroup });
+  console.log(recruitList);
+  return res.status(200).send({
+    message: "Lobby list is displayed successfully.",
+    recruitList,
+  });
 });
 
-// todo pull:: to remove userId from array.
 export default router;

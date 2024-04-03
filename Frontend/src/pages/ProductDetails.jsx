@@ -12,6 +12,7 @@ import {
 import ProductImage from "../components/ProductImage";
 import ProductDescription from "../components/ProductDescription";
 import { fallbackImage } from "../constant/general.constant";
+import Loader from "../components/Loader";
 
 const ProductDetails = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ const ProductDetails = () => {
 
   //   is loading
   if (isLoading) {
-    return <CircularProgress />;
+    return <Loader />;
   }
   return (
     <>

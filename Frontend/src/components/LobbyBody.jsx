@@ -2,13 +2,14 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { userProfileBackup } from "../constant/general.constant";
 import $axios from "../lib/axios.instance";
 import { getFullName } from "../utils/general.function";
 import LobbyDetail from "./LobbyDetail";
 import NoRecruit from "./NoRecruit";
 import Loader from "./Loader";
+import { useParams } from "react-router-dom";
 
 function stringToColor(string) {
   let hash = 0;
@@ -44,8 +45,13 @@ function stringAvatar(name) {
 const fullName = getFullName();
 
 const LobbyBody = () => {
+  const params = useParams();
+
+  console.log(params);
+
   dayjs.extend(relativeTime);
 
+  // for getting all the lobby list
   const { isLoading, isError, error, data } = useQuery({
     queryKey: ["get-recruit-list"],
     queryFn: async () => {
@@ -53,12 +59,26 @@ const LobbyBody = () => {
     },
   });
 
+  // for adding user to the slot
+  const {
+    isLoading: addUserLoading,
+    isError: addUserError,
+    mutate,
+  } = useMutation({
+    mutationKey: ["add-user-to-lobby"],
+    mutationFn: async (id) => {
+      return await $axios.post(`/lobby/addUser/${id}`);
+    },
+  });
+
   const recruitList = data?.data?.recruitList;
+  const userData = data?.data?.userData;
 
   if (recruitList && recruitList.length < 1) {
     return <NoRecruit />;
   }
-  if (isLoading) {
+
+  if (isLoading || addUserLoading) {
     return <Loader />;
   }
   return (
@@ -173,10 +193,20 @@ const LobbyBody = () => {
                     alt=""
                   />
                 </Box>
+
                 <LobbyDetail {...item} />
-                <Button variant="contained" color="warning">
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={() => {
+                    mutate();
+                  }}
+                >
                   Join
                 </Button>
+                {/* <Button variant="contained" color="error">
+                  Leave
+                </Button> */}
               </Stack>
             </>
           );

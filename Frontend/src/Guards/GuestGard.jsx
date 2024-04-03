@@ -9,7 +9,7 @@ export const GuestGard = (props) => {
   const { pathname } = useLocation();
   useEffect(() => {
     if (isLoggedInUser) {
-      navigate("/login", { replace: true });
+      navigate("/home", { replace: true });
     }
 
     if (pathname === "/" && !isLoggedInUser) {

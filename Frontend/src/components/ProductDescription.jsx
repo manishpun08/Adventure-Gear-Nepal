@@ -1,11 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Remove";
 import {
   Button,
   Checkbox,
   Chip,
-  Container,
-  Grid,
   IconButton,
   Stack,
   Tab,
@@ -13,20 +12,19 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate, useParams } from "react-router-dom";
-import DeleteProductDialog from "./DeleteProductDialog";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import $axios from "../lib/axios.instance";
 import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import $axios from "../lib/axios.instance";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from "../store/slices/snackbarSlice";
+import DeleteProductDialog from "./DeleteProductDialog";
 import ProductAddReviewDialog from "./ProductAddReviewDialog";
-import Rating from "@mui/material/Rating";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -96,6 +94,7 @@ const ProductDescription = (props) => {
     setCount((prevCount) => prevCount - 1);
   };
 
+  // add product to cart
   const { isLoading, mutate } = useMutation({
     mutationKey: ["add-product-to-cart"],
     mutationFn: async () => {
@@ -112,7 +111,7 @@ const ProductDescription = (props) => {
       dispatch(openErrorSnackbar(error?.response?.data?.message));
     },
   });
-
+  //  for rating and review
   const { data: hasUserPurchasedProduct } = useQuery({
     queryKey: ["has-purchased", params?.id],
     queryFn: async () => {
@@ -134,20 +133,16 @@ const ProductDescription = (props) => {
           aria-label="basic tabs example"
         >
           <Tab label="Description" {...a11yProps(0)} />
-          <Tab label="Return or Exchange" {...a11yProps(1)} />
-          <Tab label="Reviews" {...a11yProps(2)} />
+          <Tab label="Reviews" {...a11yProps(1)} />
+          <Tab label="Return or Exchange" {...a11yProps(2)} />
         </Tabs>
       </Box>
+      {/* product description  */}
       <CustomTabPanel value={value} index={0}>
         <Typography textAlign="justify">{`${props?.description}`}</Typography>
       </CustomTabPanel>
-
+      {/* rating and reviews  */}
       <CustomTabPanel value={value} index={1}>
-        No returns only exchange within 7 days of purchase. Packaging should be
-        intact.
-      </CustomTabPanel>
-
-      <CustomTabPanel value={value} index={2}>
         {props.ratings.length > 0 && (
           <div
             style={{
@@ -189,7 +184,7 @@ const ProductDescription = (props) => {
             sx={{ marginBottom: 2 }}
             onClick={() => setShowAddReviewDialog(true)}
           >
-            Add your review
+            Add review
           </Button>
         )}
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -210,7 +205,12 @@ const ProductDescription = (props) => {
           )}
         </div>
       </CustomTabPanel>
-
+      {/* return and exchange */}
+      <CustomTabPanel value={value} index={2}>
+        No returns only exchange within 7 days of purchase. Packaging should be
+        intact.
+      </CustomTabPanel>
+      {/* other functionality  */}
       <Box>
         <Stack direction="row" alignItems="center" mt="1rem" spacing={1}>
           <Chip label={props.brand} color="secondary" variant="outlined" />
@@ -230,6 +230,7 @@ const ProductDescription = (props) => {
           <Typography> Available quantity:</Typography>
           <Typography>{props.quantity}</Typography>
         </Stack>
+        {/* if the role is buyer  */}
         {userRole === "buyer" && (
           <>
             {/* choose quantity */}
@@ -251,7 +252,7 @@ const ProductDescription = (props) => {
             </Button>
           </>
         )}
-
+        {/* if the role is seller  */}
         {userRole === "seller" && (
           <>
             <Stack direction="row" spacing={4} mt={1}>
