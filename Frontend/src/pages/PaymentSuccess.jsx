@@ -1,11 +1,11 @@
 import { Button, Container, Stack, Typography } from "@mui/material";
 import React from "react";
-import { useQueries, useQuery } from "react-query";
+import { useQuery } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import $axios from "../lib/axios.instance";
-import { openErrorSnackbar } from "../store/slices/snackbarSlice";
-import { useDispatch } from "react-redux";
 import { togglePaymentStatus } from "../store/slices/paymentSlice";
+import { openErrorSnackbar } from "../store/slices/snackbarSlice";
 
 const PaymentSuccess = () => {
   const dispatch = useDispatch();

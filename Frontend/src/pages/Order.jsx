@@ -22,6 +22,7 @@ const tableHeader = [
   "Buyer Email",
   "Payment Status",
 ];
+
 const Order = () => {
   const dispatch = useDispatch();
   const { isLoading, isError, error, data } = useQuery({

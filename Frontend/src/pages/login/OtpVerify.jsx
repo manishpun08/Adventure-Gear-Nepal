@@ -92,8 +92,7 @@ const OtpVerify = () => {
         <Typography fontWeight="600" variant="h6">
           Enter Verification Code
         </Typography>
-        <Typography>We send you on email.</Typography>
-        <Typography>We have sent you code on :xyz@gmail.com</Typography>
+        <Typography>We have sent you code on your email address.</Typography>
       </Stack>
 
       <Grid

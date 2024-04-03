@@ -66,6 +66,7 @@ const Recruit = () => {
     <>
       <Box
         sx={{
+          marginTop: "2rem",
           display: "flex",
           justifyContent: "center",
         }}

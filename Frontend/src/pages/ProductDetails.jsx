@@ -1,18 +1,16 @@
+import {
+  Container,
+  Grid,
+  Typography
+} from "@mui/material";
 import React from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { getProductDetails } from "../lib/apis";
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
-import ProductImage from "../components/ProductImage";
-import ProductDescription from "../components/ProductDescription";
-import { fallbackImage } from "../constant/general.constant";
 import Loader from "../components/Loader";
+import ProductDescription from "../components/ProductDescription";
+import ProductImage from "../components/ProductImage";
+import { fallbackImage } from "../constant/general.constant";
+import { getProductDetails } from "../lib/apis";
 
 const ProductDetails = () => {
   const params = useParams();
