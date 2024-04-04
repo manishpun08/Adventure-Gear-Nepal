@@ -7,11 +7,14 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import $axios from "../lib/axios.instance";
+import { useNavigate } from "react-router-dom";
 
 const ProductAddReviewDialog = ({ productId, show, closeHandler }) => {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState("");
   const [review, setReview] = useState("");
+
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 
@@ -25,6 +28,7 @@ const ProductAddReviewDialog = ({ productId, show, closeHandler }) => {
       queryClient.invalidateQueries({
         queryKey: ["get-product-details", "has-purchased"],
       });
+      navigate(0);
     },
     onError: (error) => {
       console.log(error?.response?.data?.message);
