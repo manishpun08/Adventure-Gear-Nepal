@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { userProfileBackup } from "../constant/general.constant";
 import $axios from "../lib/axios.instance";
 import { getFullName } from "../utils/general.function";
@@ -45,6 +45,7 @@ function stringAvatar(name) {
 const fullName = getFullName();
 
 const LobbyBody = () => {
+  const queryClient = useQueryClient();
   const params = useParams();
 
   console.log(params);
@@ -69,9 +70,13 @@ const LobbyBody = () => {
     mutationFn: async (_id) => {
       return await $axios.post(`/lobby/addUser/${_id}`);
     },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries("get-recruit-list");
+    },
   });
 
   const recruitList = data?.data?.recruitList;
+
   const userData = data?.data?.userData;
 
   if (recruitList && recruitList.length < 1) {
@@ -113,31 +118,45 @@ const LobbyBody = () => {
                 mb={2}
                 key={item._id}
               >
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <Avatar {...stringAvatar(fullName)} />
-                </Box>
+                {item?.userDetail?.map((user) => {
+                  return (
+                    <Box
+                      key={user._id}
+                      height={160}
+                      width={160}
+                      display="flex"
+                      alignItems="center"
+                      p={2}
+                      sx={{ border: "1px solid #ddd" }}
+                    >
+                      <Avatar
+                        {...stringAvatar(`${user.firstName} ${user.lastName}`)}
+                      />
+                    </Box>
+                  );
+                })}
 
-                <Box
-                  height={160}
-                  width={160}
-                  display="flex"
-                  alignItems="center"
-                  p={2}
-                  sx={{ border: "1px solid #ddd" }}
-                >
-                  <img
-                    style={{ width: "100%" }}
-                    src={userProfileBackup}
-                    alt=""
-                  />
-                </Box>
+                {Array(item.remainingSpot)
+                  .fill()
+                  .map((item, index) => {
+                    return (
+                      <Box
+                        key={index}
+                        height={160}
+                        width={160}
+                        display="flex"
+                        alignItems="center"
+                        p={2}
+                        sx={{ border: "1px solid #ddd" }}
+                      >
+                        <img
+                          style={{ width: "100%" }}
+                          src={userProfileBackup}
+                          alt=""
+                        />
+                      </Box>
+                    );
+                  })}
 
                 <LobbyDetail {...item} />
 
