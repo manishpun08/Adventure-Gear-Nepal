@@ -12,7 +12,7 @@ export let lobbyValidation = Yup.object({
   teamCount: Yup.number()
     .required("Team Count is required.")
     .min(1, "Teammate count must be at least 1."),
-  date: Yup.date().min(currentDate, "Date cannot be past dates.").required(),
+  date: Yup.date().min(currentDate, "Date cannot be past dates.").required(), //meeting date
   requirement: Yup.string().required("Requirement is required.").trim(),
 
   contactNumber: Yup.string()
@@ -28,4 +28,5 @@ export let lobbyValidation = Yup.object({
     .min(50, "Description must be at least 50 character.")
     .max(500, "Description must be at max of 500 character."),
   image: Yup.string().nullable().trim(),
+  group: Yup.array().default([]),
 });

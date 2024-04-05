@@ -10,6 +10,7 @@ const router = express.Router();
 // creating lobby
 router.post(
   "/lobby/create",
+  isUser,
   // validating request
   async (req, res, next) => {
     // extract new user from req.body
@@ -28,6 +29,10 @@ router.post(
     let values = req.body;
     values.lobbyExpireAt = dayjs(values.date).startOf("day").add(1, "d");
 
+    // logged in user
+    const loggedInUserId = req.loggedInUserId;
+    values.group.push(loggedInUserId);
+
     await Lobby.create(values);
 
     return res
@@ -37,6 +42,8 @@ router.post(
 );
 
 // Add member to lobby by id
+// user can directly join group
+// no need for admin's approval
 router.post("/lobby/addUser/:id", isUser, async (req, res) => {
   try {
     const lobbyId = req.params.id;
@@ -59,16 +66,17 @@ router.post("/lobby/addUser/:id", isUser, async (req, res) => {
     }
 
     // Add the user's ID to the lobby's group array
-    lobby.group.push(loggedInUserId);
+    await Lobby.updateOne(
+      { _id: lobbyId },
+      {
+        $addToSet: {
+          group: loggedInUserId,
+        },
+      }
+    );
 
-    // Save the updated lobby document
-    const updatedLobby = await lobby.save();
-
-    console.log(updatedLobby);
-    console.log("User added to lobby successfully.");
     return res.status(200).send({
       message: "User is added to the lobby successfully.",
-      updatedLobby,
     });
   } catch (error) {
     console.error("Error adding user to lobby:", error);
@@ -76,7 +84,7 @@ router.post("/lobby/addUser/:id", isUser, async (req, res) => {
   }
 });
 
-// Remove member from lobby by id
+// leave lobby by member
 router.post("/lobby/removeUser/:id", isUser, async (req, res) => {
   try {
     const lobbyId = req.params.id;
@@ -92,15 +100,18 @@ router.post("/lobby/removeUser/:id", isUser, async (req, res) => {
     }
 
     // Add the user's ID to the lobby's group array
-    lobby.group.pull(loggedInUserId);
-
-    // Save the updated lobby document
-    const updatedLobby = await lobby.save();
+    await Lobby.updateOne(
+      { _id: lobbyId },
+      {
+        $pull: {
+          $group: loggedInUserId,
+        },
+      }
+    );
 
     console.log("User removed from lobby successfully.");
     return res.status(200).send({
       message: "User is removed from the lobby successfully.",
-      updatedLobby,
     });
   } catch (error) {
     console.error("Error removing user from lobby:", error);
@@ -120,30 +131,29 @@ router.get("/recruit/get/list", async (req, res) => {
         as: "userDetail",
       },
     },
+
     {
       $project: {
         destination: 1,
-        adventure: 1,
-        teamCount: 1,
-        date: 1,
-        requirement: 1,
-        contactNumber: 1,
-        description: 1,
         image: 1,
-        lobbyExpireAt: 1,
-        userData: {
-          firstName: { $first: "$userDetail.firstName" },
-          lastName: { $first: "$userDetail.lastName" },
-          email: { $first: "$userDetail.email" },
-        },
+        teamCount: 1,
+        "userDetail.firstName": 1,
+        "userDetail.lastName": 1,
+        "userDetail.image": 1,
+        "userDetail._id": 1,
       },
     },
   ]);
 
-  console.log(recruitList);
+  // calculate remaining spot
+  const newRecruitList = recruitList.map((item) => {
+    const remainingSpot = item?.teamCount - item?.userDetail?.length;
+
+    return { ...item, remainingSpot };
+  });
   return res.status(200).send({
     message: "Lobby list is displayed successfully.",
-    recruitList,
+    recruitList: newRecruitList,
   });
 });
 
