@@ -1,7 +1,12 @@
 import axios from "axios";
 
+// const $axios = axios.create({
+//   baseURL: "http://localhost:8000",
+//   timeout: 5000,
+// });
+
 const $axios = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "https://nice-puce-ray-belt.cyclic.app/",
   timeout: 5000,
 });
 

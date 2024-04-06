@@ -10,6 +10,8 @@ import LobbyDetail from "./LobbyDetail";
 import NoRecruit from "./NoRecruit";
 import Loader from "./Loader";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { openErrorSnackbar } from "../store/slices/snackbarSlice";
 
 function stringToColor(string) {
   let hash = 0;
@@ -45,10 +47,9 @@ function stringAvatar(name) {
 const fullName = getFullName();
 
 const LobbyBody = () => {
-  const queryClient = useQueryClient();
-  const params = useParams();
+  const dispatch = useDispatch();
 
-  console.log(params);
+  const queryClient = useQueryClient();
 
   dayjs.extend(relativeTime);
 
@@ -73,11 +74,12 @@ const LobbyBody = () => {
     onSuccess: (res) => {
       queryClient.invalidateQueries("get-recruit-list");
     },
+    onError: (error) => {
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
+    },
   });
 
   const recruitList = data?.data?.recruitList;
-
-  const userData = data?.data?.userData;
 
   if (recruitList && recruitList.length < 1) {
     return <NoRecruit />;

@@ -35,7 +35,7 @@ const lobbySchema = new mongoose.Schema(
     contactNumber: {
       type: Number,
       required: true,
-      min: 1000000000,
+      min: 10,
     },
 
     description: {

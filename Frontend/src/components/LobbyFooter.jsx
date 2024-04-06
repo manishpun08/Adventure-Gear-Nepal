@@ -20,7 +20,7 @@ const LobbyFooter = () => {
   return (
     <Grid container borderTop="2px solid #ddd">
       <Grid item md={8} textAlign="center" mt={2}>
-        <Stack direction="row" spacing={2}>
+        {/* <Stack direction="row" spacing={2}>
           <Box>
             <FormControl sx={{ width: "150px" }}>
               <InputLabel>SHOW ALL</InputLabel>
@@ -38,7 +38,7 @@ const LobbyFooter = () => {
               </Select>
             </FormControl>
           </Box>
-        </Stack>
+        </Stack> */}
       </Grid>
       <Grid item md={4} mt={2}>
         <Stack direction="row" spacing={4}>
