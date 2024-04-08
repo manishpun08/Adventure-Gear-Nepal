@@ -384,13 +384,13 @@ router.get("/product/list/latest", async (req, res) => {
   return res.status(200).send({ message: "success", latestProducts: products });
 });
 
-// get possible categories
+// get possible categories admin
 router.get("/product/categories", async (req, res) => {
   const categories = await Category.find({});
   return res.status(200).send({ message: "success", categories });
 });
 
-// add new categories
+// add new categories by admin
 router.post("/product/categories", async (req, res) => {
   const category = new Category({
     title: req.body.title,
@@ -399,10 +399,66 @@ router.post("/product/categories", async (req, res) => {
   return res.status(201).send({ message: "success", category });
 });
 
-// delete categories
+// delete categories by admin
 router.delete("/product/categories/:id", async (req, res) => {
   await Category.findByIdAndDelete(req.params.id);
   return res.status(200).send({ message: "success" });
 });
+
+// get category list
+router.get("/product/category/list", async (req, res) => {
+  const categoryList = await Product.aggregate([
+    { $match: {} },
+
+    {
+      $sort: {
+        category: 1,
+      },
+    },
+
+    {
+      $project: {
+        category: 1,
+        image: 1,
+      },
+    },
+  ]);
+
+  // A  New Set is a collection of unique values, meaning it cannot contain duplicate elements.
+  const uniqueIdsSet = new Set();
+  // This line creates a new array
+  const uniqueCategories = categoryList.filter((item) => {
+    // .has checks if the uniqueIdsSet
+    if (!uniqueIdsSet.has(item.category)) {
+      // If the category is unique, this line adds it to the uniqueIdsSet
+      uniqueIdsSet.add(item.category);
+      return true;
+    }
+    return false;
+  });
+
+  return res.status(200).send({ message: "Success", uniqueCategories });
+});
+
+// get product by category
+router.get(
+  "/product/category-list/:id",
+  checkMongoIdFromParams,
+  async (req, res) => {
+    // extract product id from req.params
+    const productId = req.params.id;
+    // find product
+    const product = await Product.findById(productId);
+    // if not product throw error
+    if (!product) {
+      return res.status(404).send({ message: "Product does not exist." });
+    }
+    const productInSameCategory = await Product.find({
+      category: product.category,
+    });
+
+    res.status(200).send({ message: "Success", productInSameCategory });
+  }
+);
 
 export default router;

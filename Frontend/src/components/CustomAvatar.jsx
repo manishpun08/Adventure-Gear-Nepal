@@ -44,13 +44,13 @@ function stringAvatar(name) {
 
 const settings = [
   {
-    id: 1,
     name: "Profile",
-    path: "/profile",
   },
 ];
 
 const CustomAvatar = () => {
+  const userId = localStorage.getItem("userId");
+
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -94,7 +94,7 @@ const CustomAvatar = () => {
               key={setting.id}
               sx={{ color: "#000" }}
               onClick={() => {
-                navigate(setting.path);
+                navigate(`userProfile/get/${userId}`);
               }}
             >
               {setting.name}

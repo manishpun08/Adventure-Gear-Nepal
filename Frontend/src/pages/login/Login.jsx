@@ -105,9 +105,27 @@ const Login = () => {
                 borderRadius: "10px",
               }}
             >
-              <Typography variant="h5" textAlign="center">
-                Sign In
-              </Typography>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typography fontWeight={700} variant="h5" mr={2}>
+                  Sign In
+                </Typography>
+                <Box mt={1}>
+                  <img
+                    style={{
+                      width: "60px",
+                      background: "black",
+                      borderRadius: "50%",
+                    }}
+                    src="/img/TreakLogo.png"
+                    alt=""
+                  />
+                </Box>
+              </Box>
 
               <FormControl>
                 <TextField

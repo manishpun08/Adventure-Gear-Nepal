@@ -88,7 +88,6 @@ router.post("/lobby/addUser/:id", isUser, async (req, res) => {
 router.post("/lobby/removeUser/:id", isUser, async (req, res) => {
   try {
     const lobbyId = req.params.id;
-
     const loggedInUserId = req.loggedInUserId;
 
     // Find the lobby document based on the provided ID
@@ -99,17 +98,21 @@ router.post("/lobby/removeUser/:id", isUser, async (req, res) => {
       return res.status(404).send({ message: "Lobby not found." });
     }
 
-    // Add the user's ID to the lobby's group array
+    // Check if the loggedInUserId exists
+    if (!loggedInUserId) {
+      return res.status(400).send({ message: "User is not added to lobby." });
+    }
+
+    // Remove the user's ID from the lobby's group array
     await Lobby.updateOne(
       { _id: lobbyId },
       {
         $pull: {
-          $group: loggedInUserId,
+          group: loggedInUserId,
         },
       }
     );
 
-    console.log("User removed from lobby successfully.");
     return res.status(200).send({
       message: "User is removed from the lobby successfully.",
     });

@@ -25,6 +25,8 @@ export let registerUserValidationSchema = Yup.object({
     .required("Role is required")
     .oneOf(["buyer", "seller", "admin"])
     .trim(),
+
+  image: Yup.string().default(null).nullable,
 });
 
 export let loginUserValidationSchema = Yup.object({

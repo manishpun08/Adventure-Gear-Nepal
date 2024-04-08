@@ -2,15 +2,12 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
-  FormControl,
   Grid,
   IconButton,
-  InputLabel,
-  Select,
   Stack,
   Typography,
+  Button,
 } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,8 +17,8 @@ const LobbyFooter = () => {
   return (
     <Grid container borderTop="2px solid #ddd">
       <Grid item md={8} textAlign="center" mt={2}>
-        {/* <Stack direction="row" spacing={2}>
-          <Box>
+        <Stack direction="row" spacing={2}>
+          {/* <Box>
             <FormControl sx={{ width: "150px" }}>
               <InputLabel>SHOW ALL</InputLabel>
               <Select label="Show All">
@@ -37,8 +34,17 @@ const LobbyFooter = () => {
                 <MenuItem value={"descending"}>DESCENDING</MenuItem>
               </Select>
             </FormControl>
-          </Box>
-        </Stack> */}
+          </Box> */}
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => {
+              navigate("/product");
+            }}
+          >
+            Shop For your Adventure
+          </Button>
+        </Stack>
       </Grid>
       <Grid item md={4} mt={2}>
         <Stack direction="row" spacing={4}>

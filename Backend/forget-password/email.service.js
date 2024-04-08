@@ -18,9 +18,10 @@ export const sendEmailOTP = async (firstName, otp, email) => {
       subject: "Reset Password Otp", // Subject line
       html: `
     <div style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;padding:1rem;">
-        <div style="float: right;">
-            <img style="height:100px; width:100px;" src="https://cdn.pixabay.com/photo/2017/03/16/21/18/logo-2150297_640.png"/>
+            <div style="float: right;">
+            <img style="height: 100px; width: 60px; background: #000; border-radius: 50%;" src="https://res.cloudinary.com/du65q3gjv/image/upload/v1712456370/qxldprldpfncr3cenyk4.png" />
         </div>
+
       <h3>Reset Password OTP</h3>
       <p>Dear ${firstName},</p>
       <p>Your OTP for Adventure Gear Nepal is <span style="font-weight:bold;">${otp}</span>.</p>

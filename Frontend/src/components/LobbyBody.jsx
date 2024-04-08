@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { userProfileBackup } from "../constant/general.constant";
 import $axios from "../lib/axios.instance";
@@ -11,7 +11,10 @@ import NoRecruit from "./NoRecruit";
 import Loader from "./Loader";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { openErrorSnackbar } from "../store/slices/snackbarSlice";
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from "../store/slices/snackbarSlice";
 
 function stringToColor(string) {
   let hash = 0;
@@ -47,6 +50,8 @@ function stringAvatar(name) {
 const fullName = getFullName();
 
 const LobbyBody = () => {
+  const [joined, setJoined] = useState(false);
+
   const dispatch = useDispatch();
 
   const queryClient = useQueryClient();
@@ -71,7 +76,28 @@ const LobbyBody = () => {
     mutationFn: async (_id) => {
       return await $axios.post(`/lobby/addUser/${_id}`);
     },
-    onSuccess: (res) => {
+    onSuccess: (response) => {
+      dispatch(openSuccessSnackbar(response?.data?.message));
+
+      queryClient.invalidateQueries("get-recruit-list");
+    },
+    onError: (error) => {
+      dispatch(openErrorSnackbar(error?.response?.data?.message));
+    },
+  });
+
+  const {
+    isLoading: removeUserLoading,
+    isError: removeUserError,
+    mutate: removeUser,
+  } = useMutation({
+    mutationKey: ["leave-user-from-lobby"],
+    mutationFn: async (_id) => {
+      return await $axios.post(`/lobby/removeUser/${_id}`);
+    },
+    onSuccess: (response) => {
+      dispatch(openSuccessSnackbar(response?.data?.message));
+
       queryClient.invalidateQueries("get-recruit-list");
     },
     onError: (error) => {
@@ -85,7 +111,7 @@ const LobbyBody = () => {
     return <NoRecruit />;
   }
 
-  if (isLoading || addUserLoading) {
+  if (isLoading || addUserLoading || removeUserLoading) {
     return <Loader />;
   }
   return (
@@ -98,7 +124,7 @@ const LobbyBody = () => {
                 direction="row"
                 mt={2}
                 mb={2}
-                justifyContent="space-between"
+                justifyContent={{ md: "space-between" }}
               >
                 <Typography variant="h5" fontWeight="600">
                   Trip to {item?.destination}{" "}
@@ -108,7 +134,11 @@ const LobbyBody = () => {
                     ({item?.adventure})
                   </span>
                 </Typography>
-                <Typography variant="h5" fontWeight="600" paddingRight={25}>
+                <Typography
+                  variant="h5"
+                  fontWeight="600"
+                  paddingRight={{ md: 25 }}
+                >
                   Expires {dayjs(item?.lobbyExpireAt).fromNow()}
                 </Typography>
               </Stack>
@@ -124,8 +154,8 @@ const LobbyBody = () => {
                   return (
                     <Box
                       key={user._id}
-                      height={160}
-                      width={160}
+                      height={{ md: 160, xs: 100 }}
+                      width={{ md: 160, xs: 100 }}
                       display="flex"
                       alignItems="center"
                       p={2}
@@ -161,19 +191,30 @@ const LobbyBody = () => {
                   })}
 
                 <LobbyDetail {...item} />
-
-                <Button
-                  variant="contained"
-                  color="warning"
-                  onClick={() => {
-                    mutate(item._id);
-                  }}
-                >
-                  Join
-                </Button>
-                {/* <Button variant="contained" color="error">
-                  Leave
-                </Button> */}
+                {!joined && (
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={() => {
+                      mutate(item._id);
+                      setJoined(true);
+                    }}
+                  >
+                    Join
+                  </Button>
+                )}
+                {joined && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      removeUser(item._id);
+                      setJoined(false);
+                    }}
+                  >
+                    Leave
+                  </Button>
+                )}
               </Stack>
             </>
           );

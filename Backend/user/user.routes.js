@@ -5,6 +5,8 @@ import { loginUserValidationSchema } from "./user.validation.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { userReqBodyValidation } from "../middleware/reqBodyUser.middleware.js";
+import { isUser } from "../middleware/authentication.middleware.js";
+import { checkMongoIdFromParams } from "../middleware/mongo.id.validity.middleware.js";
 
 const router = express.Router();
 
@@ -98,6 +100,56 @@ router.post(
     return res
       .status(200)
       .send({ message: "success", user: user, token: token });
+  }
+);
+
+// get profile
+router.get(
+  "/userProfile/get/:id",
+  isUser,
+  // validating mongo id
+  checkMongoIdFromParams,
+  async (req, res) => {
+    const userId = req.params.id;
+    const user = await User.findOne({ _id: userId });
+    return res
+      .status(200)
+      .send({ message: "user is displayed successfully.", user });
+  }
+);
+
+// edit profile
+router.post(
+  "/userProfile/edit/:id",
+  //is user
+  isUser,
+  // validating mongo id
+  checkMongoIdFromParams,
+
+  async (req, res) => {
+    // extract user id from req.params
+    const userId = req.params.id;
+    // find user
+    const user = await User.findOne({ _id: userId });
+    // if not user, throw error
+    if (!user) {
+      return res.status(404).send({ message: "User not exist." });
+    }
+    // extract new values from req.body
+    const newValues = req.body;
+    // edit user
+    await User.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          ...newValues,
+        },
+      }
+    );
+    // send response
+    return res
+      .status(200)
+      .send({ message: "Profile is updated successfully." });
   }
 );
 

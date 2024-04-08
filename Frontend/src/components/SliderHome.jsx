@@ -7,14 +7,14 @@ const banner = [
   {
     title: "Gear Up for Adventure Explore, Discover, Thrive!",
     description:
-      "Gear Up for Adventure: Explore, Discover, Thrive! Dive into the world of exploration with our premium gear designed to elevate your outdoor experiences. Unleash your adventurous spirit and conquer every trail, peak, and challenge with confidence. From backpacking to camping, our equipment ensures you're always ready to embrace the thrill of the wilderness.",
+      "Gear Up for Adventure: Explore, Discover, Thrive! Dive into the world of exploration with our premium gear designed to elevate your outdoor experiences. Unleash your adventurous spirit and conquer every trail, peak, and challenge with confidence. ",
 
     image: "https://i.ibb.co/1KgSFjz/B-Image.png",
   },
   {
     title: "Unleash Your Adventurous Spirit – Gear Up with Us!",
     description:
-      "Explore boundless possibilities with Adventure Gear Nepal. From rugged terrains to serene landscapes, we equip you for every journey. Discover quality gear, expert advice, and unparalleled service, all in one destination. Embark on your next adventure with confidence, only at Adventure Gear Nepal.",
+      "Explore boundless possibilities with Adventure Gear Nepal. From rugged terrains to serene landscapes, we equip you for every journey. Discover quality gear, expert advice, and unparalleled service, all in one destination.",
 
     image: "https://i.ibb.co/HzbCg58/B-Image2.png",
   },
@@ -29,7 +29,7 @@ const SliderHome = () => {
     slidesToScroll: 1,
     autoplay: true,
     speed: 4000,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 6000,
     cssEase: "linear",
   };
 
@@ -63,6 +63,7 @@ const SliderHome = () => {
                       fontWeight: "bold",
                       textAlign: "start",
                       marginLeft: { xs: "1rem", md: "2rem" },
+                      fontSize: { xs: "24px" },
                     }}
                   >
                     {item.title}
@@ -75,6 +76,7 @@ const SliderHome = () => {
                       textAlign: "justify",
                       marginLeft: { xs: "1rem", md: "2rem" },
                       paddingRight: { xs: "1rem", md: "2rem" },
+                      fontSize: { xs: "14px" },
                     }}
                   >
                     {item.description}

@@ -136,13 +136,23 @@ const Header = (props) => {
         <Container maxWidth="lg">
           <Grid container>
             {/* logo */}
-            <Grid item xs={12} md={2}>
+            <Grid
+              item
+              xs={12}
+              md={2}
+              sx={{
+                textAlign: "center",
+                "@media (min-width:600px)": { textAlign: "left" },
+              }}
+            >
               <img
                 onClick={() => {
                   navigate("/home");
                 }}
-                style={{ width: "90px", cursor: "pointer" }}
-                className="logo"
+                style={{
+                  width: "90px",
+                  cursor: "pointer",
+                }}
                 src="/img/TreakLogo.png"
                 alt="logo"
               />
@@ -163,7 +173,7 @@ const Header = (props) => {
                   aria-label="open drawer"
                   edge="start"
                   onClick={handleDrawerToggle}
-                  sx={{ mr: 2, display: { sm: "none" } }}
+                  sx={{ marginLeft: 0.1, display: { sm: "none" } }}
                 >
                   <MenuIcon />
                 </IconButton>

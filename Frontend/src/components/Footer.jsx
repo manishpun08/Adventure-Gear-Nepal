@@ -18,8 +18,15 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 const Footer = () => {
   return (
     <>
-      <Box className="footer">
-        <Box className="footer-top" sx={{ p: 3 }}>
+      <Box
+        className="footer"
+        sx={{
+          width: "100%",
+          marginTop: "auto",
+          p: 3,
+        }}
+      >
+        <Box className="footer-top">
           <Container maxWidth="lg">
             <Grid container>
               <Grid item xs={12} md={4}>

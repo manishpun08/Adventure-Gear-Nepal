@@ -63,6 +63,8 @@ function a11yProps(index) {
 const ProductDescription = (props) => {
   const dispatch = useDispatch();
 
+  console.log(props);
+
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
